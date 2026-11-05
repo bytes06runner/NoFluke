@@ -1,0 +1,89 @@
+{
+  "$schema": "./schema/params.schema.json",
+  "season": { "endsAt": 1798675200 },
+  "match": {
+    "hpStart": 100,
+    "meterStart": 25,
+    "meterCap": 100,
+    "overdriveCost": 50,
+    "meterWin": 15,
+    "meterLoss": 25,
+    "damageBase": 10,
+    "damageDiffCapPoints": 20,
+    "tiePoints": 1,
+    "regularRounds": 5,
+    "maxRounds": 6,
+    "sigmaMinPpm": 100,
+    "sigmaMaxPpm": 5000,
+    "payoffPerZ": 10,
+    "counterHitNumerator": 3,
+    "counterHitDenominator": 2
+  },
+  "timing": {
+    "startDelayS": 30,
+    "slotS": 30,
+    "commitS": 8,
+    "anchorMarginS": 2,
+    "tapeS": 20,
+    "priceWindowS": 10,
+    "revealGraceS": 600,
+    "settleGraceS": 3600,
+    "refundGraceS": 86400,
+    "joinDeadlineS": 300
+  },
+  "feeds": {
+    "order": ["BTC/USD", "ETH/USD", "SOL/USD"],
+    "entries": {
+      "BTC/USD": { "id": "0xe62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43", "slug": "btc", "stormCWad": "486000000000000000", "binanceSymbol": "BTCUSDT" },
+      "ETH/USD": { "id": "0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace", "slug": "eth", "stormCWad": "503000000000000000", "binanceSymbol": "ETHUSDT" },
+      "SOL/USD": { "id": "0xef0d8b6fda2ceba41da15d4095d1da392a0d2f8ed0c6c7bc0f4cfac8c280b56d", "slug": "sol", "stormCWad": "526000000000000000", "binanceSymbol": "SOLUSDT" }
+    }
+  },
+  "sigmaRef": { "windows": 90 },
+  "storm": { "lookbackS": 60, "minSamplesS": 30, "breakpointFactorWad": "700000000000000000" },
+  "voidRule": { "confCapBps": 100 },
+  "referee": {
+    "alphaInv": 100,
+    "zClipWad": "3000000000000000000",
+    "deltaPointsWad": "10000000000000000000",
+    "habitHorizon": 64,
+    "habitShortHorizon": 16,
+    "meanHorizon": 512,
+    "meanShortHorizon": 64,
+    "kappaWad": "1000000000000000000",
+    "mPointsWad": "120000000000000000000",
+    "lambdaMaxWad": "500000000000000000",
+    "onsBetaWad": "2218801049600288410",
+    "lapseLambdaWad": "200000000000000000",
+    "lapseA": 500,
+    "lapseEdgeFloorWad": "0"
+  },
+  "stakes": { "rakeBps": 200, "maxStakeUsdc6": "10000000", "unverifiedCapUsdc6": "3000000", "permitDeadlineS": 600 },
+  "vault": {
+    "maxStakeBps": 500,
+    "dailyLossBps": 2000,
+    "maxDuelsPerDay": 32,
+    "fundCooldownS": 120,
+    "feeBps": 2000,
+    "minOwnBps": 2500
+  },
+  "family": { "correlationFlagKappaWad": "600000000000000000", "correlationMinRounds": 30 },
+  "world": {
+    "acrAccepted": ["https://world.org/oidc/acr/orb", "https://world.org/oidc/acr/orb-face"],
+    "clockSkewS": 30,
+    "attemptTtlS": 600,
+    "approvalTtlS": 300,
+    "idkitAction": "nofluke-family"
+  },
+  "validation": {
+    "seeds": 10000,
+    "quickSeeds": 500,
+    "roundsPerCareer": 1500,
+    "fitDays": 20,
+    "dataDays": 30,
+    "optimiserCandidates": 500,
+    "staggeredFamilySize": 20,
+    "gMinWad": "5000000000000000",
+    "rngSeed": 20261105
+  }
+}

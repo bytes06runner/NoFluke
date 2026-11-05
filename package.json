@@ -5,7 +5,12 @@
   "engines": { "node": ">=20" },
   "packageManager": "pnpm@9.15.9",
   "scripts": {
-    "lint-hardcode": "node scripts/lint-hardcode.mjs",
-    "test": "pnpm -r --if-present test"
+    "check-config": "node scripts/check-config.mjs",
+    "lint-hardcode": "node scripts/lint-hardcode.mjs"
+  },
+  "devDependencies": {
+    "@pythnetwork/pyth-sdk-solidity": "4.3.1",
+    "ajv": "8.20.0",
+    "typescript": "5.9.3"
   }
 }

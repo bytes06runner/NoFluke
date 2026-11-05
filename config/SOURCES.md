@@ -71,3 +71,21 @@ Sources: https://ethglobal.com/events/mumbai/prizes/arkiv and https://docs.arkiv
 | Agent Pass guides (OIDC, step-up, testing) | https://auth.world.org/docs and https://auth.world.org/llms.txt |
 | IDKit 4 integration | https://docs.world.org/world-id/idkit/integrate |
 | Fake identities at the event | https://ethglobal.com/events/mumbai/prizes/world |
+
+## Pyth feed IDs
+
+Source: https://www.pyth.network/developers/price-feed-ids, as recorded in the knowledge pack (checked against Hermes on 2026-10-18). BTC/USD was re-read from the Pyth docs on 2026-11-05. All three must be re-checked against Hermes `/v2/price_feeds` once `PYTH_API_KEY` is set.
+
+## Parameters (`config/params.json`)
+
+| Group | Source | Status |
+| --- | --- | --- |
+| `match`, `timing`, `stakes`, `vault`, `sigmaRef`, `storm`, `voidRule` | `docs/PLAN.md` and pack `02-game-rules.md` | Values from the team's plan and earlier measurements |
+| `feeds.*.stormCWad` | Pack `03-referee-maths.md`, Binance 1 s data to 2026-10-17 | **Provisional.** To be refitted in validation |
+| `referee.alphaInv`, `zClipWad`, `deltaPointsWad`, `habitHorizon`, `lambdaMaxWad`, `lapseLambdaWad`, `lapseA` | `docs/PLAN.md`, "Statistical formulation v2" | From the plan |
+| `referee.onsBetaWad` | Computed as 2/(2 − ln 3) at 60-digit precision | Checked by a test |
+| `referee.habitShortHorizon`, `meanHorizon`, `meanShortHorizon`, `kappaWad`, `lapseEdgeFloorWad` | Referee v3 additions | **Provisional.** To be calibrated in validation |
+| `referee.mPointsWad` | Must cover the largest possible excess, enforced by `scripts/check-config.mjs` | Follows from κ |
+| `world.*` | https://auth.world.org/docs and pack `02-game-rules.md` | To be confirmed during the World work |
+| `season.endsAt` | Team choice: 2026-12-31 00:00 UTC | Can change before deployment |
+| `validation.*` | Prompt B section 3 and `docs/PLAN.md` | From the prompts |

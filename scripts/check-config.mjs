@@ -33,7 +33,9 @@ if (BigInt(r.lambdaMaxWad) > WAD / 2n) problems.push("referee.lambdaMaxWad above
 if (r.habitShortHorizon >= r.habitHorizon) problems.push("referee.habitShortHorizon must be below habitHorizon");
 if (r.meanShortHorizon >= r.meanHorizon) problems.push("referee.meanShortHorizon must be below meanHorizon");
 const t = p.timing;
-if (t.commitS + t.anchorMarginS + t.tapeS !== t.slotS) problems.push("timing: commit + anchor margin + tape must equal the slot");
+// Tapes are contiguous, so a round's commit and anchor window sits inside the previous round's tape.
+if (t.commitS + t.anchorMarginS > t.slotS) problems.push("timing: commit + anchor margin must fit in one slot");
+if (t.tapeS > t.slotS) problems.push("timing: the tape must fit in one slot");
 if (t.priceWindowS > t.revealGraceS) problems.push("timing: price window must not exceed the reveal grace");
 if (t.settleGraceS >= t.refundGraceS) problems.push("timing: settle grace must be below the refund grace");
 for (const name of p.feeds.order) if (!p.feeds.entries[name]) problems.push(`feeds.order names unknown feed ${name}`);

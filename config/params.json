@@ -22,11 +22,11 @@
     "counterHitDenominator": 2
   },
   "timing": {
-    "startDelayS": 30,
-    "slotS": 30,
-    "commitS": 8,
-    "anchorMarginS": 2,
-    "tapeS": 20,
+    "startDelayS": 12,
+    "slotS": 36,
+    "commitS": 10,
+    "anchorMarginS": 26,
+    "tapeS": 36,
     "priceWindowS": 10,
     "revealGraceS": 600,
     "settleGraceS": 3600,
@@ -45,21 +45,21 @@
         "slug": "btc",
         "stormCWad": "486000000000000000",
         "binanceSymbol": "BTCUSDT",
-        "sigmaInitPpm": 152
+        "sigmaInitPpm": 204
       },
       "ETH/USD": {
         "id": "0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace",
         "slug": "eth",
         "stormCWad": "503000000000000000",
         "binanceSymbol": "ETHUSDT",
-        "sigmaInitPpm": 247
+        "sigmaInitPpm": 331
       },
       "SOL/USD": {
         "id": "0xef0d8b6fda2ceba41da15d4095d1da392a0d2f8ed0c6c7bc0f4cfac8c280b56d",
         "slug": "sol",
         "stormCWad": "526000000000000000",
         "binanceSymbol": "SOLUSDT",
-        "sigmaInitPpm": 335
+        "sigmaInitPpm": 449
       }
     }
   },

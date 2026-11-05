@@ -74,7 +74,7 @@ contract RefereeTest is Test {
     function test_forfeitIsTheWorstRound() public {
         _certify(a);
         IReferee.Verdict memory before = ref.verdictOf(c);
-        for (uint256 i; i < 30; ++i) _round(c, i % 2 == 0 ? UP : DOWN, b, GUARD, i % 2 == 0 ? P0 + P0 / 2000 : P0 - P0 / 2000);
+        for (uint256 i; i < 60; ++i) _round(c, i % 2 == 0 ? UP : DOWN, b, GUARD, i % 2 == 0 ? P0 + P0 / 2000 : P0 - P0 / 2000);
         before = ref.verdictOf(c);
         assertGt(before.lambda, 0);
         ref.recordForfeit(c);

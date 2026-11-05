@@ -20,6 +20,7 @@ interface IReferee {
         int256 m;
         uint256 lambdaMax;
         uint256 onsBeta;
+        uint256 onsA0;
         uint256 lapseLambda;
         uint256 lapseA;
         int256 lapseEdgeFloor;

@@ -21,6 +21,7 @@ class Params:
     m: int
     lambda_max: int
     ons_beta: int
+    ons_a0: int
     lapse_lambda: int
     lapse_a: int
     lapse_edge_floor: int
@@ -56,6 +57,7 @@ def load_params(path: Path = CONFIG) -> Params:
         m=int(r["mPointsWad"]),
         lambda_max=int(r["lambdaMaxWad"]),
         ons_beta=int(r["onsBetaWad"]),
+        ons_a0=int(r["onsA0Wad"]),
         lapse_lambda=int(r["lapseLambdaWad"]),
         lapse_a=r["lapseA"],
         lapse_edge_floor=int(r["lapseEdgeFloorWad"]),

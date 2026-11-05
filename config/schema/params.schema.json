@@ -174,7 +174,8 @@
         "lapseA",
         "lapseEdgeFloorWad",
         "sigmaHorizon",
-        "rankDepth"
+        "rankDepth",
+        "onsA0Wad"
       ],
       "properties": {
         "alphaInv": {
@@ -224,6 +225,9 @@
         },
         "rankDepth": {
           "$ref": "#/definitions/posInt"
+        },
+        "onsA0Wad": {
+          "$ref": "#/definitions/uintStr"
         }
       }
     },

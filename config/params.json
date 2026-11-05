@@ -96,7 +96,8 @@
     "lapseA": 500,
     "lapseEdgeFloorWad": "4000000000000000",
     "sigmaHorizon": 90,
-    "rankDepth": 3
+    "rankDepth": 3,
+    "onsA0Wad": "16000000000000000000"
   },
   "stakes": {
     "rakeBps": 200,

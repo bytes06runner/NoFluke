@@ -47,6 +47,7 @@ class FastParams:
             m=p.m / WAD,
             lambda_max=p.lambda_max / WAD,
             ons_beta=p.ons_beta / WAD,
+            a0=p.ons_a0 / WAD,
             lapse_lambda=p.lapse_lambda / WAD,
             lapse_a=float(p.lapse_a),
             lapse_edge_floor=p.lapse_edge_floor / WAD,

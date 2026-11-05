@@ -73,6 +73,7 @@ export interface RefereeParams {
   m: bigint;
   lambdaMax: bigint;
   onsBeta: bigint;
+  onsA0: bigint;
   lapseLambda: bigint;
   lapseA: bigint;
   lapseEdgeFloor: bigint;
@@ -100,6 +101,7 @@ export function refereeParams(d: any): RefereeParams {
     m: BigInt(r.mPointsWad),
     lambdaMax: BigInt(r.lambdaMaxWad),
     onsBeta: BigInt(r.onsBetaWad),
+    onsA0: BigInt(r.onsA0Wad),
     lapseLambda: BigInt(r.lapseLambdaWad),
     lapseA: BigInt(r.lapseA),
     lapseEdgeFloor: BigInt(r.lapseEdgeFloorWad),
@@ -159,7 +161,7 @@ export class Referee {
   fighter(addr: string): FighterState {
     let s = this.fighters.get(addr);
     if (!s) {
-      s = { n: [0n, 0n, 0n, 0n], nShort: [0n, 0n, 0n, 0n], logW: 0n, lambda: 0n, A: WAD, logL: 0n, rounds: 0, kAtCert: 0, lapsed: false };
+      s = { n: [0n, 0n, 0n, 0n], nShort: [0n, 0n, 0n, 0n], logW: 0n, lambda: 0n, A: this.p.onsA0, logL: 0n, rounds: 0, kAtCert: 0, lapsed: false };
       this.fighters.set(addr, s);
     }
     return s;

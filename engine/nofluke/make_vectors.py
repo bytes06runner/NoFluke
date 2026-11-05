@@ -94,21 +94,25 @@ def build(params):
     for i in range(40):
         h.round("A", GUARD if i < 20 else BURST, 2, "B", DOWN, 2, rng.gauss(0, 1))
     h = new("direction reader reaches the bar")
-    for i in range(160):
+    for i in range(1200):
         z = 2.0 if i % 2 else -2.0
         h.round("A", UP if z > 0 else DOWN, 2, "B", rng.randrange(4), 2, z)
+        if h.ref.fighter("A").k_at_cert:
+            break
     h = new("lambda clamps at zero")
     for i in range(30):
         z = 2.0 if i % 2 else -2.0
         h.round("A", DOWN if z > 0 else UP, 2, "B", GUARD, 2, z)
     h = new("lambda clamps at the maximum")
-    for i in range(60):
+    for i in range(400):
         z = 3.0 if i % 2 else -3.0
         h.round("A", UP if z > 0 else DOWN, 1, "B", GUARD, 1, z)
+        if h.ref.fighter("A").lambda_ == params.lambda_max:
+            break
     h = new("family grows mid history")
-    for i in range(120):
+    for i in range(300):
         z = 2.0 if i % 2 else -2.0
-        h.round("A", UP if z > 0 else DOWN, 2 + i // 8, "B", GUARD, 1, z)
+        h.round("A", UP if z > 0 else DOWN, 2 + i // 20, "B", GUARD, 1, z)
     h = new("forfeits mixed with rounds")
     for i in range(40):
         z = 2.0 if i % 2 else -2.0
@@ -120,9 +124,9 @@ def build(params):
     for i in range(12):
         h.round("A", i % 4, 2, "B", GUARD, 2, rng.gauss(0, 1), advance=i % 3 == 2)
     h = new("certify then lapse")
-    for i in range(400):
+    for i in range(3000):
         z = 2.0 if i % 2 else -2.0
-        if i < 160:
+        if h.ref.fighter("A").k_at_cert == 0:
             h.round("A", UP if z > 0 else DOWN, 2, "B", GUARD, 2, z)
         else:
             h.round("A", DOWN if z > 0 else UP, 2, "B", GUARD, 2, z)

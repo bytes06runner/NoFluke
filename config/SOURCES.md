@@ -82,9 +82,9 @@ Source: https://www.pyth.network/developers/price-feed-ids, as recorded in the k
 | --- | --- | --- |
 | `match`, `timing`, `stakes`, `vault`, `sigmaRef`, `storm`, `voidRule` | `docs/PLAN.md` and pack `02-game-rules.md` | Values from the team's plan and earlier measurements |
 | `feeds.*.stormCWad` | Pack `03-referee-maths.md`, Binance 1 s data to 2026-10-17 | **Provisional.** To be refitted in validation |
-| `referee.alphaInv`, `zClipWad`, `deltaPointsWad`, `habitHorizon`, `lambdaMaxWad`, `lapseLambdaWad`, `lapseA` | `docs/PLAN.md`, "Statistical formulation v2" | From the plan |
+| `referee.alphaInv`, `zClipWad`, `deltaPointsWad`, `lapseLambdaWad`, `lapseA` | `docs/PLAN.md`, "Statistical formulation v2" | From the plan |
 | `referee.onsBetaWad` | Computed as 2/(2 − ln 3) at 60-digit precision | Checked by a test |
-| `referee.habitShortHorizon`, `meanHorizon`, `meanShortHorizon`, `kappaWad`, `lapseEdgeFloorWad` | Referee v3 additions | **Provisional.** To be calibrated in validation |
+| `referee.habitHorizon`, `habitShortHorizon`, `meanHorizon`, `meanShortHorizon`, `sigmaHorizon`, `kappaWad`, `onsA0Wad`, `lambdaMaxWad`, `lapseEdgeFloorWad` | Calibrated on real recorded data, see `docs/reports/referee-validation.md` | Differ from the PLAN where measurement required it, see `docs/DECISIONS.md` |
 | `referee.mPointsWad` | Must cover the largest possible excess, enforced by `scripts/check-config.mjs` | Follows from κ |
 | `world.*` | https://auth.world.org/docs and pack `02-game-rules.md` | To be confirmed during the World work |
 | `season.endsAt` | Team choice: 2026-12-31 00:00 UTC | Can change before deployment |

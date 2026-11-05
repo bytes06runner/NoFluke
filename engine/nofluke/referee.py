@@ -120,7 +120,9 @@ class Referee:
         self._sigma_floor = params.sigma_min_ppm * 10**12
 
     def fighter(self, addr) -> FighterState:
-        return self.fighters.setdefault(addr, FighterState())
+        if addr not in self.fighters:
+            self.fighters[addr] = FighterState(A=self.p.ons_a0)
+        return self.fighters[addr]
 
     def feed(self, feed_id) -> FeedState:
         if feed_id not in self.feeds:

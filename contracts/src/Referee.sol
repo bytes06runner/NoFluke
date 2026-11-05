@@ -82,6 +82,7 @@ contract Referee is IReferee {
     int256 public immutable M_POINTS;
     int256 public immutable LAMBDA_MAX;
     int256 public immutable ONS_BETA;
+    uint128 public immutable ONS_A0;
     int256 public immutable LAPSE_LAMBDA;
     int256 public immutable LN_LAPSE_A;
     int256 public immutable LAPSE_EDGE_FLOOR;
@@ -106,7 +107,7 @@ contract Referee is IReferee {
                 || p.habitShortHorizon < 2 || p.habitShortHorizon >= p.habitHorizon || p.meanHorizon == 0
                 || p.meanShortHorizon == 0 || p.meanShortHorizon >= p.meanHorizon || p.sigmaHorizon == 0 || p.m <= 0
                 || p.zClip <= 0 || p.delta <= 0 || p.lambdaMax >= uint256(WAD) || p.lapseLambda >= uint256(WAD) / 2
-                || p.lapseA < 2 || p.tapeS == 0 || p.rankDepth == 0 || p.sigmaMinPpm == 0
+                || p.lapseA < 2 || p.onsA0 == 0 || p.tapeS == 0 || p.rankDepth == 0 || p.sigmaMinPpm == 0
                 || feedIds.length != sigmaInitPpm.length
         ) revert BadParams();
         arena = arena_;
@@ -124,6 +125,7 @@ contract Referee is IReferee {
         M_POINTS = p.m;
         LAMBDA_MAX = int256(p.lambdaMax);
         ONS_BETA = int256(p.onsBeta);
+        ONS_A0 = uint128(p.onsA0);
         LAPSE_LAMBDA = int256(p.lapseLambda);
         LN_LAPSE_A = M.lnWad(int256(p.lapseA) * WAD);
         LAPSE_EDGE_FLOOR = p.lapseEdgeFloor;
@@ -192,7 +194,7 @@ contract Referee is IReferee {
 
     function fighterState(address fighter) external view returns (FighterView memory) {
         Fighter storage s = _fighters[fighter];
-        return FighterView(s.n, s.nShort, s.logW, s.lambda, s.A == 0 ? uint256(WAD) : s.A, s.logL, s.rounds, s.kAtCert, s.lapsed);
+        return FighterView(s.n, s.nShort, s.logW, s.lambda, s.A == 0 ? uint256(ONS_A0) : s.A, s.logL, s.rounds, s.kAtCert, s.lapsed);
     }
 
     function feedState(bytes32 feedId) external view returns (FeedView memory) {
@@ -215,7 +217,7 @@ contract Referee is IReferee {
     }
 
     function _ensureInit(Fighter storage s) private {
-        if (s.A == 0) s.A = uint128(uint256(WAD));
+        if (s.A == 0) s.A = ONS_A0;
     }
 
     function _clip(int256 x, int256 lo, int256 hi) private pure returns (int256) {

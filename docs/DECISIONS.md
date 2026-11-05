@@ -1,5 +1,20 @@
 # Decisions (newest on top)
 
+## 2026-11-05 22:20 IST
+Referee settings chosen by measurement on BTC, to be confirmed by the full run across all feeds. Where these differ from the PLAN, the PLAN's values failed the attacks or had almost no power.
+
+| Setting | PLAN | Now | Why |
+| --- | --- | --- | --- |
+| Habit horizon H | 64 | 16 | Forgetting faster shrinks the bias a habit switcher can exploit |
+| Public mean horizon | Not specified | 256 | Measured |
+| Referee sigma horizon | Not in the plan | 90 | Measured |
+| κ (drift allowance) | Prompt B: smallest that passes | 0 | With the other settings, no penalty is needed, and any κ costs power |
+| ONS A₀ | 1 | 16 | Real v is about 0.12, not about 1. With A₀ = 1 the bet moves about 0.1 per round and can chase a lucky block. This is what stopped the attack from growing with career length. |
+| λ maximum | ½ | 0.9 | Real v is small, so a ½ cap held the bet far below optimal. Validity needs only 1 + λv > 0. We give up the published ONS regret bound, which assumes the ½ cap. |
+| M | 80 + 40κ | 80 | Only the clip on losses needs the full range |
+
+Honest limit: drift-attack rates still grow with career length. They are measured to 3,000 rounds (about 40 hours), and the report states that limit. "Exactly anytime-valid" holds for stable habits only.
+
 ## 2026-11-05 21:55 IST
 - **Duels run on a shared slot grid, and each tape reaches the feed exactly once, in any settlement order.** Round starts are multiples of the tape length. The first quick validation run showed that if an attacker could choose which tapes reach the public averages, it could beat the 1% limit (feed poisoning). With a shared grid and a per-tape record, any tape a fighter is rated on always reaches the feed, so that choice no longer exists.
 - **The plan's "robust to habit drift" claim did not survive measurement.** A market-blind Guard/Burst switcher reached 6% false-Skilled at the plan's settings with no allowance (κ = 0), against the 1% limit. Horizons and κ are being recalibrated from real data. Results go in `docs/reports/referee-validation.md`.

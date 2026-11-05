@@ -34,6 +34,7 @@ library ConfigReader {
         p.m = i(j, ".referee.mPointsWad");
         p.lambdaMax = u(j, ".referee.lambdaMaxWad");
         p.onsBeta = u(j, ".referee.onsBetaWad");
+        p.onsA0 = u(j, ".referee.onsA0Wad");
         p.lapseLambda = u(j, ".referee.lapseLambdaWad");
         p.lapseA = u(j, ".referee.lapseA");
         p.lapseEdgeFloor = i(j, ".referee.lapseEdgeFloorWad");

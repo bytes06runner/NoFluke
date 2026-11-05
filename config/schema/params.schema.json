@@ -3,120 +3,341 @@
   "title": "Game, referee and validation parameters",
   "type": "object",
   "additionalProperties": false,
-  "required": ["season", "match", "timing", "feeds", "sigmaRef", "storm", "voidRule", "referee", "stakes", "vault", "family", "world", "validation"],
+  "required": [
+    "season",
+    "match",
+    "timing",
+    "feeds",
+    "sigmaRef",
+    "storm",
+    "voidRule",
+    "referee",
+    "stakes",
+    "vault",
+    "family",
+    "world",
+    "validation"
+  ],
   "definitions": {
-    "posInt": { "type": "integer", "minimum": 1 },
-    "bps": { "type": "integer", "minimum": 0, "maximum": 10000 },
-    "uintStr": { "type": "string", "pattern": "^[0-9]+$" },
-    "ints": { "type": "object", "additionalProperties": { "type": "integer", "minimum": 0 } }
+    "posInt": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "bps": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 10000
+    },
+    "uintStr": {
+      "type": "string",
+      "pattern": "^[0-9]+$"
+    },
+    "ints": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "integer",
+        "minimum": 0
+      }
+    }
   },
   "properties": {
-    "$schema": { "type": "string" },
-    "season": { "type": "object", "additionalProperties": false, "required": ["endsAt"], "properties": { "endsAt": { "$ref": "#/definitions/posInt" } } },
-    "match": { "$ref": "#/definitions/ints" },
-    "timing": { "$ref": "#/definitions/ints" },
+    "$schema": {
+      "type": "string"
+    },
+    "season": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "endsAt"
+      ],
+      "properties": {
+        "endsAt": {
+          "$ref": "#/definitions/posInt"
+        }
+      }
+    },
+    "match": {
+      "$ref": "#/definitions/ints"
+    },
+    "timing": {
+      "$ref": "#/definitions/ints"
+    },
     "feeds": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["order", "entries"],
+      "required": [
+        "order",
+        "entries"
+      ],
       "properties": {
-        "order": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+        "order": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
         "entries": {
           "type": "object",
           "additionalProperties": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["id", "slug", "stormCWad", "binanceSymbol"],
+            "required": [
+              "id",
+              "slug",
+              "stormCWad",
+              "binanceSymbol",
+              "sigmaInitPpm"
+            ],
             "properties": {
-              "id": { "type": "string", "pattern": "^0x[0-9a-f]{64}$" },
-              "slug": { "type": "string", "pattern": "^[a-z0-9]+$" },
-              "stormCWad": { "$ref": "#/definitions/uintStr" },
-              "binanceSymbol": { "type": "string" }
+              "id": {
+                "type": "string",
+                "pattern": "^0x[0-9a-f]{64}$"
+              },
+              "slug": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+$"
+              },
+              "stormCWad": {
+                "$ref": "#/definitions/uintStr"
+              },
+              "binanceSymbol": {
+                "type": "string"
+              },
+              "sigmaInitPpm": {
+                "$ref": "#/definitions/posInt"
+              }
             }
           }
         }
       }
     },
-    "sigmaRef": { "$ref": "#/definitions/ints" },
+    "sigmaRef": {
+      "$ref": "#/definitions/ints"
+    },
     "storm": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["lookbackS", "minSamplesS", "breakpointFactorWad"],
+      "required": [
+        "lookbackS",
+        "minSamplesS",
+        "breakpointFactorWad"
+      ],
       "properties": {
-        "lookbackS": { "$ref": "#/definitions/posInt" },
-        "minSamplesS": { "$ref": "#/definitions/posInt" },
-        "breakpointFactorWad": { "$ref": "#/definitions/uintStr" }
+        "lookbackS": {
+          "$ref": "#/definitions/posInt"
+        },
+        "minSamplesS": {
+          "$ref": "#/definitions/posInt"
+        },
+        "breakpointFactorWad": {
+          "$ref": "#/definitions/uintStr"
+        }
       }
     },
-    "voidRule": { "type": "object", "additionalProperties": false, "required": ["confCapBps"], "properties": { "confCapBps": { "$ref": "#/definitions/bps" } } },
+    "voidRule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "confCapBps"
+      ],
+      "properties": {
+        "confCapBps": {
+          "$ref": "#/definitions/bps"
+        }
+      }
+    },
     "referee": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["alphaInv", "zClipWad", "deltaPointsWad", "habitHorizon", "habitShortHorizon", "meanHorizon", "meanShortHorizon", "kappaWad", "mPointsWad", "lambdaMaxWad", "onsBetaWad", "lapseLambdaWad", "lapseA", "lapseEdgeFloorWad"],
+      "required": [
+        "alphaInv",
+        "zClipWad",
+        "deltaPointsWad",
+        "habitHorizon",
+        "habitShortHorizon",
+        "meanHorizon",
+        "meanShortHorizon",
+        "kappaWad",
+        "mPointsWad",
+        "lambdaMaxWad",
+        "onsBetaWad",
+        "lapseLambdaWad",
+        "lapseA",
+        "lapseEdgeFloorWad",
+        "sigmaHorizon",
+        "rankDepth"
+      ],
       "properties": {
-        "alphaInv": { "const": 100 },
-        "zClipWad": { "$ref": "#/definitions/uintStr" },
-        "deltaPointsWad": { "$ref": "#/definitions/uintStr" },
-        "habitHorizon": { "$ref": "#/definitions/posInt" },
-        "habitShortHorizon": { "$ref": "#/definitions/posInt" },
-        "meanHorizon": { "$ref": "#/definitions/posInt" },
-        "meanShortHorizon": { "$ref": "#/definitions/posInt" },
-        "kappaWad": { "$ref": "#/definitions/uintStr" },
-        "mPointsWad": { "$ref": "#/definitions/uintStr" },
-        "lambdaMaxWad": { "$ref": "#/definitions/uintStr" },
-        "onsBetaWad": { "$ref": "#/definitions/uintStr" },
-        "lapseLambdaWad": { "$ref": "#/definitions/uintStr" },
-        "lapseA": { "$ref": "#/definitions/posInt" },
-        "lapseEdgeFloorWad": { "$ref": "#/definitions/uintStr" }
+        "alphaInv": {
+          "const": 100
+        },
+        "zClipWad": {
+          "$ref": "#/definitions/uintStr"
+        },
+        "deltaPointsWad": {
+          "$ref": "#/definitions/uintStr"
+        },
+        "habitHorizon": {
+          "$ref": "#/definitions/posInt"
+        },
+        "habitShortHorizon": {
+          "$ref": "#/definitions/posInt"
+        },
+        "meanHorizon": {
+          "$ref": "#/definitions/posInt"
+        },
+        "meanShortHorizon": {
+          "$ref": "#/definitions/posInt"
+        },
+        "kappaWad": {
+          "$ref": "#/definitions/uintStr"
+        },
+        "mPointsWad": {
+          "$ref": "#/definitions/uintStr"
+        },
+        "lambdaMaxWad": {
+          "$ref": "#/definitions/uintStr"
+        },
+        "onsBetaWad": {
+          "$ref": "#/definitions/uintStr"
+        },
+        "lapseLambdaWad": {
+          "$ref": "#/definitions/uintStr"
+        },
+        "lapseA": {
+          "$ref": "#/definitions/posInt"
+        },
+        "lapseEdgeFloorWad": {
+          "$ref": "#/definitions/uintStr"
+        },
+        "sigmaHorizon": {
+          "$ref": "#/definitions/posInt"
+        },
+        "rankDepth": {
+          "$ref": "#/definitions/posInt"
+        }
       }
     },
     "stakes": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["rakeBps", "maxStakeUsdc6", "unverifiedCapUsdc6", "permitDeadlineS"],
+      "required": [
+        "rakeBps",
+        "maxStakeUsdc6",
+        "unverifiedCapUsdc6",
+        "permitDeadlineS"
+      ],
       "properties": {
-        "rakeBps": { "$ref": "#/definitions/bps" },
-        "maxStakeUsdc6": { "$ref": "#/definitions/uintStr" },
-        "unverifiedCapUsdc6": { "$ref": "#/definitions/uintStr" },
-        "permitDeadlineS": { "$ref": "#/definitions/posInt" }
+        "rakeBps": {
+          "$ref": "#/definitions/bps"
+        },
+        "maxStakeUsdc6": {
+          "$ref": "#/definitions/uintStr"
+        },
+        "unverifiedCapUsdc6": {
+          "$ref": "#/definitions/uintStr"
+        },
+        "permitDeadlineS": {
+          "$ref": "#/definitions/posInt"
+        }
       }
     },
-    "vault": { "$ref": "#/definitions/ints" },
+    "vault": {
+      "$ref": "#/definitions/ints"
+    },
     "family": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["correlationFlagKappaWad", "correlationMinRounds"],
+      "required": [
+        "correlationFlagKappaWad",
+        "correlationMinRounds"
+      ],
       "properties": {
-        "correlationFlagKappaWad": { "$ref": "#/definitions/uintStr" },
-        "correlationMinRounds": { "$ref": "#/definitions/posInt" }
+        "correlationFlagKappaWad": {
+          "$ref": "#/definitions/uintStr"
+        },
+        "correlationMinRounds": {
+          "$ref": "#/definitions/posInt"
+        }
       }
     },
     "world": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["acrAccepted", "clockSkewS", "attemptTtlS", "approvalTtlS", "idkitAction"],
+      "required": [
+        "acrAccepted",
+        "clockSkewS",
+        "attemptTtlS",
+        "approvalTtlS",
+        "idkitAction"
+      ],
       "properties": {
-        "acrAccepted": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
-        "clockSkewS": { "type": "integer", "minimum": 0 },
-        "attemptTtlS": { "$ref": "#/definitions/posInt" },
-        "approvalTtlS": { "$ref": "#/definitions/posInt" },
-        "idkitAction": { "type": "string", "minLength": 1 }
+        "acrAccepted": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "clockSkewS": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "attemptTtlS": {
+          "$ref": "#/definitions/posInt"
+        },
+        "approvalTtlS": {
+          "$ref": "#/definitions/posInt"
+        },
+        "idkitAction": {
+          "type": "string",
+          "minLength": 1
+        }
       }
     },
     "validation": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["seeds", "quickSeeds", "roundsPerCareer", "fitDays", "dataDays", "optimiserCandidates", "staggeredFamilySize", "gMinWad", "rngSeed"],
+      "required": [
+        "seeds",
+        "quickSeeds",
+        "roundsPerCareer",
+        "fitDays",
+        "dataDays",
+        "optimiserCandidates",
+        "staggeredFamilySize",
+        "gMinWad",
+        "rngSeed"
+      ],
       "properties": {
-        "seeds": { "$ref": "#/definitions/posInt" },
-        "quickSeeds": { "$ref": "#/definitions/posInt" },
-        "roundsPerCareer": { "$ref": "#/definitions/posInt" },
-        "fitDays": { "$ref": "#/definitions/posInt" },
-        "dataDays": { "$ref": "#/definitions/posInt" },
-        "optimiserCandidates": { "$ref": "#/definitions/posInt" },
-        "staggeredFamilySize": { "$ref": "#/definitions/posInt" },
-        "gMinWad": { "$ref": "#/definitions/uintStr" },
-        "rngSeed": { "$ref": "#/definitions/posInt" }
+        "seeds": {
+          "$ref": "#/definitions/posInt"
+        },
+        "quickSeeds": {
+          "$ref": "#/definitions/posInt"
+        },
+        "roundsPerCareer": {
+          "$ref": "#/definitions/posInt"
+        },
+        "fitDays": {
+          "$ref": "#/definitions/posInt"
+        },
+        "dataDays": {
+          "$ref": "#/definitions/posInt"
+        },
+        "optimiserCandidates": {
+          "$ref": "#/definitions/posInt"
+        },
+        "staggeredFamilySize": {
+          "$ref": "#/definitions/posInt"
+        },
+        "gMinWad": {
+          "$ref": "#/definitions/uintStr"
+        },
+        "rngSeed": {
+          "$ref": "#/definitions/posInt"
+        }
       }
     }
   }

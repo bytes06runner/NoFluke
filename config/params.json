@@ -1,6 +1,8 @@
 {
   "$schema": "./schema/params.schema.json",
-  "season": { "endsAt": 1798675200 },
+  "season": {
+    "endsAt": 1798675200
+  },
   "match": {
     "hpStart": 100,
     "meterStart": 25,
@@ -32,16 +34,46 @@
     "joinDeadlineS": 300
   },
   "feeds": {
-    "order": ["BTC/USD", "ETH/USD", "SOL/USD"],
+    "order": [
+      "BTC/USD",
+      "ETH/USD",
+      "SOL/USD"
+    ],
     "entries": {
-      "BTC/USD": { "id": "0xe62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43", "slug": "btc", "stormCWad": "486000000000000000", "binanceSymbol": "BTCUSDT" },
-      "ETH/USD": { "id": "0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace", "slug": "eth", "stormCWad": "503000000000000000", "binanceSymbol": "ETHUSDT" },
-      "SOL/USD": { "id": "0xef0d8b6fda2ceba41da15d4095d1da392a0d2f8ed0c6c7bc0f4cfac8c280b56d", "slug": "sol", "stormCWad": "526000000000000000", "binanceSymbol": "SOLUSDT" }
+      "BTC/USD": {
+        "id": "0xe62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43",
+        "slug": "btc",
+        "stormCWad": "486000000000000000",
+        "binanceSymbol": "BTCUSDT",
+        "sigmaInitPpm": 152
+      },
+      "ETH/USD": {
+        "id": "0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace",
+        "slug": "eth",
+        "stormCWad": "503000000000000000",
+        "binanceSymbol": "ETHUSDT",
+        "sigmaInitPpm": 247
+      },
+      "SOL/USD": {
+        "id": "0xef0d8b6fda2ceba41da15d4095d1da392a0d2f8ed0c6c7bc0f4cfac8c280b56d",
+        "slug": "sol",
+        "stormCWad": "526000000000000000",
+        "binanceSymbol": "SOLUSDT",
+        "sigmaInitPpm": 335
+      }
     }
   },
-  "sigmaRef": { "windows": 90 },
-  "storm": { "lookbackS": 60, "minSamplesS": 30, "breakpointFactorWad": "700000000000000000" },
-  "voidRule": { "confCapBps": 100 },
+  "sigmaRef": {
+    "windows": 90
+  },
+  "storm": {
+    "lookbackS": 60,
+    "minSamplesS": 30,
+    "breakpointFactorWad": "700000000000000000"
+  },
+  "voidRule": {
+    "confCapBps": 100
+  },
   "referee": {
     "alphaInv": 100,
     "zClipWad": "3000000000000000000",
@@ -56,9 +88,16 @@
     "onsBetaWad": "2218801049600288410",
     "lapseLambdaWad": "200000000000000000",
     "lapseA": 500,
-    "lapseEdgeFloorWad": "0"
+    "lapseEdgeFloorWad": "0",
+    "sigmaHorizon": 90,
+    "rankDepth": 3
   },
-  "stakes": { "rakeBps": 200, "maxStakeUsdc6": "10000000", "unverifiedCapUsdc6": "3000000", "permitDeadlineS": 600 },
+  "stakes": {
+    "rakeBps": 200,
+    "maxStakeUsdc6": "10000000",
+    "unverifiedCapUsdc6": "3000000",
+    "permitDeadlineS": 600
+  },
   "vault": {
     "maxStakeBps": 500,
     "dailyLossBps": 2000,
@@ -67,9 +106,15 @@
     "feeBps": 2000,
     "minOwnBps": 2500
   },
-  "family": { "correlationFlagKappaWad": "600000000000000000", "correlationMinRounds": 30 },
+  "family": {
+    "correlationFlagKappaWad": "600000000000000000",
+    "correlationMinRounds": 30
+  },
   "world": {
-    "acrAccepted": ["https://world.org/oidc/acr/orb", "https://world.org/oidc/acr/orb-face"],
+    "acrAccepted": [
+      "https://world.org/oidc/acr/orb",
+      "https://world.org/oidc/acr/orb-face"
+    ],
     "clockSkewS": 30,
     "attemptTtlS": 600,
     "approvalTtlS": 300,

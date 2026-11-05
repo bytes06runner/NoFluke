@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Arkiv network config",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["name", "chainId", "rpcUrl", "wsUrl", "explorerUrl", "indexerUrl", "faucetUrl", "accessKeysUrl", "writers"],
+  "definitions": {
+    "url": { "type": "string", "pattern": "^https?://" },
+    "address": { "type": "string", "pattern": "^0x[0-9a-fA-F]{40}$" }
+  },
+  "properties": {
+    "$schema": { "type": "string" },
+    "name": { "type": "string", "minLength": 1 },
+    "chainId": { "type": "integer", "minimum": 1 },
+    "rpcUrl": { "$ref": "#/definitions/url" },
+    "wsUrl": { "type": "string", "pattern": "^wss?://" },
+    "explorerUrl": { "$ref": "#/definitions/url" },
+    "indexerUrl": { "$ref": "#/definitions/url" },
+    "faucetUrl": { "$ref": "#/definitions/url" },
+    "accessKeysUrl": { "$ref": "#/definitions/url" },
+    "writers": {
+      "type": "object",
+      "description": "Public writer wallet addresses by role. Readers filter on these because anyone can write any shape to Arkiv.",
+      "additionalProperties": { "$ref": "#/definitions/address" }
+    }
+  }
+}

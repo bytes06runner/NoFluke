@@ -1,0 +1,12 @@
+{
+  "$schema": "../schema/arkiv.schema.json",
+  "name": "rabdi",
+  "chainId": 7794095,
+  "rpcUrl": "https://rpc.rabdi.db-chain.testnet.arkiv.network",
+  "wsUrl": "wss://rpc.rabdi.db-chain.testnet.arkiv.network",
+  "explorerUrl": "https://rabdi.explorer.arkiv.network",
+  "indexerUrl": "https://indexer.rabdi.db-chain.testnet.arkiv.network",
+  "faucetUrl": "https://hub.arkiv.network/faucet",
+  "accessKeysUrl": "https://hub.arkiv.network/access-keys",
+  "writers": {}
+}

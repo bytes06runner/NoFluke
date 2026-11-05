@@ -1,0 +1,35 @@
+{
+  "$schema": "../schema/network.schema.json",
+  "name": "sepolia",
+  "chainId": 11155111,
+  "rpcUrl": "https://ethereum-sepolia-rpc.publicnode.com",
+  "archiveRpcUrl": "https://sepolia.gateway.tenderly.co",
+  "explorerUrl": "https://sepolia.etherscan.io",
+  "pyth": {
+    "contract": "0x26DD80569a8B23768A1d80869Ed7339e07595E85",
+    "hermesUrl": "https://hermes.pyth.network",
+    "historyUrl": "https://pyth.dourolabs.app/v1"
+  },
+  "usdc": {
+    "address": "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238",
+    "decimals": 6
+  },
+  "ens": {
+    "parentLabel": "nofluke",
+    "tld": "eth",
+    "ethRegistrar": "0xf633e7fc17e2bbe0d0965d18ec1821dcb754a3d3",
+    "ethRegistry": "0xd4ebcbbdf463c9c45784603db0ddd499bc44a8b4",
+    "rootRegistry": "0xb458d6a3a77919449d03e7a6903c26827c1ec43f",
+    "labelStore": "0xed8246ff02203a4d4cb262bd78beaa7408a57cae",
+    "verifiableFactory": "0xda70306c98e97ece36f997a21368e53298572991",
+    "userRegistryImpl": "0x9bd8a88719068d09ecee662f36c0e3856708366a",
+    "permissionedResolverImpl": "0x115eb53f0c60696633855f90b138178fb40b2b2c",
+    "universalResolver": "0xeEeEEEeE14D718C2B47D9923Deab1335E144EeEe",
+    "paymentToken": "0x240b0316df57887dbbe58b586508b19e633a14aa"
+  },
+  "erc8004": {
+    "identityRegistry": "0x8004A818BFB912233c491871b3d84c89A494BD9e",
+    "reputationRegistry": "0x8004B663056A597Dffe9eCcC1965A193B7388713"
+  },
+  "deployment": {}
+}

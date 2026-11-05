@@ -1,5 +1,17 @@
 # Decisions (newest on top)
 
+## 2026-11-05 21:45 IST
+Four referee changes beyond the prompts. All are in `docs/interfaces.md`, and each gets a test.
+- **The referee sets its own z scale.** A duel's `sigmaRef` is picked by its creator, so colluders could inflate z and "know" that Burst pays. The referee scales raw returns by its own forgetting estimate instead.
+- **Feed state updates at most once per tape,** so many duels on one tape cannot overweight a single move.
+- **Expired duels charge v = -1 to both fighters.** Otherwise a colluding pair could simply never settle a losing duel.
+- **The lapse detector gets an edge floor.** With the plan's formula, a fighter whose edge falls to exactly zero never lapses, because zero edge is inside the detector's null. The value comes from validation.
+
+Other changes:
+- **No matchmaker key.** Fighters create duels and find them on Arkiv, per the PLAN, so the old signed ticket goes away.
+- **`Approval` gains a nonce** so each approval works only once.
+- **Interfaces go ahead as v1 without a stop.** The owner said to do the complete thing. Lane sign-off is still requested, and any change gets logged here.
+
 ## 2026-11-05 21:22 IST
 - **Parent name is `nofluke` (config: `ens.parentLabel`), not `drafted-arena`.** The practice deployment irreversibly revoked the
   role that sets `drafted-arena.eth`'s subregistry, so it cannot host this build's registry. `nofluke` was available on Sepolia.

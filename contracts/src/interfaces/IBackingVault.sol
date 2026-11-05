@@ -6,5 +6,5 @@ interface IBackingVault {
     function fundStake(address fighter, uint256 duelId, uint256 amount, uint256 fighterOwn, address opponent) external;
 
     /// @notice Receives the vault's share of a finished duel. The arena transfers `returned` before calling.
-    function onSettle(uint256 duelId, address fighter, uint256 returned) external;
+    function onSettle(uint256 duelId, address fighter, uint256 returned, bool forfeitLoss) external;
 }

@@ -111,7 +111,8 @@
     "maxDuelsPerDay": 32,
     "fundCooldownS": 120,
     "feeBps": 2000,
-    "minOwnBps": 2500
+    "minOwnBps": 2500,
+    "forfeitPauseS": 86400
   },
   "family": {
     "correlationFlagKappaWad": "600000000000000000",

@@ -3,11 +3,26 @@ pragma solidity ^0.8.26;
 
 import {IPyth} from "@pythnetwork/pyth-sdk-solidity/IPyth.sol";
 import {PythErrors} from "@pythnetwork/pyth-sdk-solidity/PythErrors.sol";
+import {ApprovalLib} from "../src/ApprovalLib.sol";
+import {BackingVault} from "../src/BackingVault.sol";
 import {DuelArena} from "../src/DuelArena.sol";
 import {FightMath as F} from "../src/FightMath.sol";
 import {IBackingVault} from "../src/interfaces/IBackingVault.sol";
 import {IReferee} from "../src/interfaces/IReferee.sol";
 import {ArenaBase} from "./helpers/ArenaBase.sol";
+
+/// @dev Says the fighter it was given is certified, and nobody else is.
+contract MockCertified {
+    address public fighter;
+
+    function set(address f) external {
+        fighter = f;
+    }
+
+    function verdictOf(address f) external view returns (IReferee.Verdict memory v) {
+        v.skilled = f == fighter;
+    }
+}
 
 contract DuelArenaTest is ArenaBase {
     int64 constant BIG = 20_000_000; // z = 2 at SIGMA and P0: the capped hit
@@ -740,5 +755,118 @@ contract DuelArenaTest is ArenaBase {
         vm.warp(at);
         if (at <= deadline) vm.expectRevert(DuelArena.TooEarly.selector);
         arena.voidBoundary{value: 1 ether}(id, 1, proof);
+    }
+}
+
+/// @notice The arena and the vault working together, with the funded fighter certified by a test double.
+contract ArenaVaultTest is ArenaBase {
+    BackingVault vault;
+    MockCertified cert;
+
+    function setUp() public {
+        vm.warp(1_800_000_000);
+        cert = new MockCertified();
+        // The vault needs the arena's address and the arena needs the vault's, so the vault goes at a chosen address.
+        _deployWithVault(address(0xBA017));
+    }
+
+    function _deployWithVault(address predictedVault) internal {
+        _deploy(IBackingVault(predictedVault));
+        string memory j = vm.readFile("../config/params.json");
+        BackingVault.Params memory p = BackingVault.Params({
+            maxStakeBps: vm.parseJsonUint(j, ".vault.maxStakeBps"),
+            dailyLossBps: vm.parseJsonUint(j, ".vault.dailyLossBps"),
+            maxDuelsPerDay: vm.parseJsonUint(j, ".vault.maxDuelsPerDay"),
+            fundCooldown: vm.parseJsonUint(j, ".vault.fundCooldownS"),
+            feeBps: vm.parseJsonUint(j, ".vault.feeBps"),
+            minOwnBps: vm.parseJsonUint(j, ".vault.minOwnBps"),
+            forfeitPause: vm.parseJsonUint(j, ".vault.forfeitPauseS")
+        });
+        deployCodeTo("BackingVault.sol:BackingVault", abi.encode(address(usdc), address(arena), IReferee(address(cert)), reg, vm.addr(attesterKey), p), predictedVault);
+        vault = BackingVault(predictedVault);
+        cert.set(b);
+        ApprovalLib.Approval memory x = ApprovalLib.Approval(b, ApprovalLib.ACTION_ALLOW_BACKING, keccak256(abi.encode(b)), uint64(block.timestamp + 60), 1);
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(attesterKey, vault.approvalDigest(x));
+        vault.allowBacking(b, x, abi.encodePacked(r, s, v));
+        usdc.mint(address(0xB0), 1000 * uint256(STAKE));
+        vm.startPrank(address(0xB0));
+        usdc.approve(address(vault), type(uint256).max);
+        vault.deposit(b, 100 * uint256(STAKE));
+        vm.stopPrank();
+    }
+
+    function _fundedJoin(uint256 id, uint96 vaultAmount) internal {
+        _approve(b);
+        vm.prank(b);
+        arena.joinDuel(id, noPermit, vaultAmount);
+    }
+
+    function test_fundedWinSplitsProRata() public {
+        uint256 id = _create(a, STAKE, address(0));
+        uint96 part = STAKE / 2;
+        (uint256 before,,,) = vault.vaultOf(b);
+        _fundedJoin(id, part);
+        for (uint8 r = 1; r <= 2; ++r) _play(id, r, UP, DOWN);
+        _settle(id, _updates(id, _bumps(2, -20_000_000)));
+        (uint256 assets,,, uint256 inFlight) = vault.vaultOf(b);
+        assertEq(inFlight, 0);
+        assertGt(assets, before);
+        assertEq(usdc.balanceOf(address(arena)), 0);
+    }
+
+    function test_fundedLossLeavesVaultDown() public {
+        uint256 id = _create(a, STAKE, address(0));
+        uint96 part = STAKE / 2;
+        (uint256 before,,,) = vault.vaultOf(b);
+        _fundedJoin(id, part);
+        for (uint8 r = 1; r <= 2; ++r) _play(id, r, UP, DOWN);
+        _settle(id, _updates(id, _bumps(2, 20_000_000)));
+        (uint256 assets,,, uint256 inFlight) = vault.vaultOf(b);
+        assertEq(inFlight, 0);
+        assertEq(assets, before - part);
+    }
+
+    function test_fundedDrawRefundsTheVault() public {
+        uint256 id = _create(a, STAKE, address(0));
+        uint96 part = STAKE / 2;
+        (uint256 before,,,) = vault.vaultOf(b);
+        _fundedJoin(id, part);
+        for (uint8 r = 1; r <= 6; ++r) _play(id, r, GUARD, GUARD);
+        _settle(id, _updates(id, new int64[](6)));
+        (uint256 assets,,,) = vault.vaultOf(b);
+        assertEq(assets, before);
+    }
+
+    function test_thrownFundedDuelPausesTheVault() public {
+        uint256 id = _create(a, STAKE, address(0));
+        _fundedJoin(id, STAKE / 2);
+        vm.warp(arena.tStart(id, 1) - 1);
+        bytes32 ca = _hash(id, 1, a, UP, 0, false);
+        arena.anchorOwn(id, 1, 0, ca, _sig(id, 1, ca, aMove));
+        vm.warp(arena.tStart(id, 1));
+        _reveal(id, 1, 0, UP);
+        arena.settle(id, new bytes[](0));
+        assertGt(vault.pausedUntil(b), block.timestamp);
+    }
+
+    function test_coFundingBelowTheMinimumOwnShareReverts() public {
+        uint256 id = _create(a, STAKE, address(0));
+        uint96 part = STAKE - STAKE / 10;
+        _approve(b);
+        vm.prank(b);
+        vm.expectRevert(DuelArena.BadVaultSplit.selector);
+        arena.joinDuel(id, noPermit, part);
+    }
+
+    function test_refundExpiredReturnsTheVaultsPart() public {
+        uint256 id = _create(a, STAKE, address(0));
+        uint96 part = STAKE / 2;
+        (uint256 before,,,) = vault.vaultOf(b);
+        _fundedJoin(id, part);
+        vm.warp(arena.revealDeadline(id) + arena.REFUND_GRACE() + 1);
+        arena.refundExpired(id);
+        (uint256 assets,,, uint256 inFlight) = vault.vaultOf(b);
+        assertEq(assets, before);
+        assertEq(inFlight, 0);
     }
 }

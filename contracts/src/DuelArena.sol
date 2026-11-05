@@ -546,7 +546,7 @@ contract DuelArena is EIP712, ReentrancyGuard {
         while (F.needsRound(rules, x.m)) _scoreRound(x, rules);
         _duels[id].status = Status.Settled;
         _release(d);
-        (uint256 payout, uint256 rake) = _payOut(id, d, x.m.winner);
+        (uint256 payout, uint256 rake) = _payOut(id, d, x.m.winner, x.m.reason == F.REASON_FORFEIT);
         emit DuelSettled(id, x.m.winner, x.m.reason, x.m.r, payout, rake);
         uint256 extra = msg.value - x.fee;
         if (extra > 0) {
@@ -561,19 +561,18 @@ contract DuelArena is EIP712, ReentrancyGuard {
     }
 
     function _splitToSide(uint256 id, address fighter, uint256 amount, uint96 vaultPart, uint256 stake) private {
-        if (vaultPart == 0 || amount == 0) {
-            if (vaultPart != 0) vault.onSettle(id, fighter, 0);
+        if (vaultPart == 0) {
             _pay(fighter, amount);
             return;
         }
         // Pro rata, rounding the vault's share down.
         uint256 toVault = (amount * vaultPart) / stake;
         SafeTransferLib.safeTransfer(usdc, address(vault), toVault);
-        vault.onSettle(id, fighter, toVault);
+        vault.onSettle(id, fighter, toVault, false);
         _pay(fighter, amount - toVault);
     }
 
-    function _payOut(uint256 id, Duel memory d, uint8 winner) private returns (uint256 payout, uint256 rake) {
+    function _payOut(uint256 id, Duel memory d, uint8 winner, bool forfeit) private returns (uint256 payout, uint256 rake) {
         uint256 stake = d.stake;
         if (winner == 0) {
             _pay(d.a, stake);
@@ -585,7 +584,7 @@ contract DuelArena is EIP712, ReentrancyGuard {
         _pay(rakeTo, rake);
         if (winner == 1) {
             _pay(d.a, payout);
-            if (d.vaultB != 0) vault.onSettle(id, d.b, 0);
+            if (d.vaultB != 0) vault.onSettle(id, d.b, 0, forfeit);
         } else {
             _splitToSide(id, d.b, payout, d.vaultB, stake);
         }

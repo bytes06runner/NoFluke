@@ -83,7 +83,6 @@ contract VectorsTest is Test {
                     assertEq(f.meanAbsShort, v[fa + 3], "meanAbsShort");
                     assertEq(int256(f.varReturn), v[fa + 4], "varReturn");
                     assertEq(int256(uint256(f.count)), v[fa + 5], "count");
-                    assertEq(int256(uint256(f.lastT)), v[fa + 6], "lastT");
                 } else {
                     r.recordForfeit(a);
                 }

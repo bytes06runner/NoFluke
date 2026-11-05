@@ -128,7 +128,7 @@ export interface FeedState {
   meanAbsShort: bigint;
   varReturn: bigint;
   count: number;
-  lastT: bigint;
+  seen: Set<bigint>;
 }
 
 export interface Verdict {
@@ -169,7 +169,7 @@ export class Referee {
     let f = this.feeds.get(id);
     if (!f) {
       const sigma = this.p.sigmaInitPpm[id]! * 10n ** 12n;
-      f = { meanZ: 0n, meanAbs: 0n, meanZShort: 0n, meanAbsShort: 0n, varReturn: (sigma * sigma) / WAD, count: 0, lastT: 0n };
+      f = { meanZ: 0n, meanAbs: 0n, meanZShort: 0n, meanAbsShort: 0n, varReturn: (sigma * sigma) / WAD, count: 0, seen: new Set() };
       this.feeds.set(id, f);
     }
     return f;
@@ -261,7 +261,10 @@ export class Referee {
   }
 
   private updateFeed(f: FeedState, t: bigint, r: bigint, z: bigint): void {
-    if (f.count > 0 && t < f.lastT + this.p.tapeS) return;
+    // Exactly once per tape, in any settlement order: a rated round's tape always reaches the feed.
+    const tape = t / this.p.tapeS;
+    if (f.seen.has(tape)) return;
+    f.seen.add(tape);
     const zc = clip(z, -this.p.zClip, this.p.zClip);
     const a = abs(zc);
     f.count += 1;
@@ -272,7 +275,6 @@ export class Referee {
     f.meanZShort += (zc - f.meanZShort) / shortH;
     f.meanAbsShort += (a - f.meanAbsShort) / shortH;
     f.varReturn += ((r * r) / WAD - f.varReturn) / this.p.sigmaHorizon;
-    f.lastT = t;
   }
 
   // One scored, non-void round. Both fighters use the feed state from before this round.

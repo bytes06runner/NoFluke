@@ -92,10 +92,10 @@ class FeedState:
     mean_abs_short: int = 0
     var_return: int = 0
     count: int = 0
-    last_t: int = 0
+    seen: set = field(default_factory=set)
 
     def snapshot(self):
-        return astuple(self)
+        return (self.mean_z, self.mean_abs, self.mean_z_short, self.mean_abs_short, self.var_return, self.count)
 
 
 @dataclass(frozen=True)
@@ -131,7 +131,7 @@ class Referee:
     def snapshot(self):
         return (
             {k: astuple(v) for k, v in self.fighters.items()},
-            {k: astuple(v) for k, v in self.feeds.items()},
+            {k: v.snapshot() for k, v in self.feeds.items()},
         )
 
     def sigma_wad(self, feed_id) -> int:
@@ -206,8 +206,11 @@ class Referee:
             s.n_short[m] = s.n_short[m] * self._gamma_short // WAD + hit
 
     def _update_feed(self, f: FeedState, t: int, r: int, z: int) -> None:
-        if f.count > 0 and t < f.last_t + self.p.tape_s:
+        # Exactly once per tape, in any settlement order: a rated round's tape always reaches the feed.
+        tape = t // self.p.tape_s
+        if tape in f.seen:
             return
+        f.seen.add(tape)
         zc = clip(z, -self.p.z_clip, self.p.z_clip)
         a = abs(zc)
         f.count += 1
@@ -218,7 +221,6 @@ class Referee:
         f.mean_z_short += tdiv(zc - f.mean_z_short, short_h)
         f.mean_abs_short += tdiv(a - f.mean_abs_short, short_h)
         f.var_return += tdiv(r * r // WAD - f.var_return, self.p.sigma_horizon)
-        f.last_t = t
 
     def record_round(self, feed_id, t, p0, p1, c, fighter_a, move_a, k_a, fighter_b, move_b, k_b) -> None:
         """One scored, non-void round. Both fighters use the feed state from before this round."""

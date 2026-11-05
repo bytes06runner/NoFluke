@@ -19,8 +19,12 @@ def price_for_z(ref, z_float):
     return int(P0 * (1 + z_float * sigma))
 
 
+def next_t(ref):
+    return (ref.feed(FEED).count + 50_000) * P.tape_s
+
+
 def play(ref, fighter, move, z=0.5, k=2, t=None, other="opp", other_move=GUARD):
-    t = ref.feed(FEED).last_t + P.tape_s if t is None else t
+    t = next_t(ref) if t is None else t
     ref.record_round(FEED, t, P0, price_for_z(ref, z), C, fighter, move, k, other, other_move, k)
     return t
 
@@ -135,7 +139,7 @@ def test_opponent_has_no_effect_on_a_fighters_state():
     rng = random.Random(3)
     for _ in range(100):
         z, m = rng.gauss(0, 1), rng.randrange(4)
-        t = a.feed(FEED).last_t + P.tape_s
+        t = next_t(a)
         p1 = price_for_z(a, z)
         a.record_round(FEED, t, P0, p1, C, "f", m, 2, "x", UP, 2)
         b.record_round(FEED, t, P0, p1, C, "f", m, 2, "y", rng.randrange(4), 5)
@@ -149,23 +153,33 @@ def test_referee_ignores_duel_sigma():
     assert not any("sigma" in n for n in inspect.signature(Referee.record_round).parameters)
 
 
-def test_feed_updates_at_most_once_per_tape():
+def test_feed_updates_exactly_once_per_tape():
     ref = Referee(P)
-    t = ref.feed(FEED).last_t + P.tape_s
+    t = 50_000 * P.tape_s
     p1 = price_for_z(ref, 1.0)
     ref.record_round(FEED, t, P0, p1, C, "a", UP, 2, "b", DOWN, 2)
     once = ref.feed(FEED).snapshot()
     ref.record_round(FEED, t, P0, p1, C, "c", UP, 2, "d", DOWN, 2)
-    ref.record_round(FEED, t + P.tape_s - 1, P0, p1, C, "e", UP, 2, "f", DOWN, 2)
     assert ref.feed(FEED).snapshot() == once
     ref.record_round(FEED, t + P.tape_s, P0, p1, C, "g", UP, 2, "h", DOWN, 2)
     assert ref.feed(FEED).snapshot() != once
 
 
+def test_a_rated_rounds_tape_reaches_the_feed_in_any_settlement_order():
+    # Settling a later duel first must not let an earlier rated round skip the feed.
+    ref = Referee(P)
+    t = 50_000 * P.tape_s
+    p1 = price_for_z(ref, 1.0)
+    ref.record_round(FEED, t + 10 * P.tape_s, P0, p1, C, "a", UP, 2, "b", DOWN, 2)
+    after_later = ref.feed(FEED).count
+    ref.record_round(FEED, t, P0, p1, C, "a", UP, 2, "b", DOWN, 2)
+    assert ref.feed(FEED).count == after_later + 1
+
+
 def test_fighters_in_a_round_use_the_feed_state_from_before_the_round():
     a = Referee(P)
     b = Referee(P)
-    t = a.feed(FEED).last_t + P.tape_s
+    t = next_t(a)
     p1 = price_for_z(a, 1.0)
     a.record_round(FEED, t, P0, p1, C, "x", BURST, 2, "y", GUARD, 2)
     b.record_round(FEED, t, P0, p1, C, "y", GUARD, 2, "x", BURST, 2)

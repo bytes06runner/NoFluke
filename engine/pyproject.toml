@@ -4,7 +4,10 @@ version = "0.1.0"
 description = "Reference referee maths and validation for NoFluke"
 requires-python = ">=3.12,<3.13"
 license = { text = "MIT" }
-dependencies = ["numpy>=2,<3"]
+dependencies = [
+    "numpy>=2,<3",
+    "scipy>=1.18.1",
+]
 
 [dependency-groups]
 dev = ["pytest>=8,<9", "hypothesis>=6,<7"]

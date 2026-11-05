@@ -1,0 +1,357 @@
+{
+ "seeds": 500,
+ "quick": true,
+ "feeds": [
+  {
+   "slug": "btc",
+   "c": 0.4343661087883433,
+   "theta": 0.0740281626492269,
+   "attacks": {
+    "1": {
+     "label": "Stop at a lucky moment (uniform random, checked every round)",
+     "hits": 0,
+     "n": 500,
+     "rate": 0.0,
+     "ub95": 0.005973551516349557,
+     "gMean": 0.0004445158403051773
+    },
+    "2-up": {
+     "label": "Always Up",
+     "hits": 0,
+     "n": 500,
+     "rate": 0.0,
+     "ub95": 0.005973551516349557,
+     "gMean": 0.025987609913870478
+    },
+    "2-down": {
+     "label": "Always Down",
+     "hits": 0,
+     "n": 500,
+     "rate": 0.0,
+     "ub95": 0.005973551516349557,
+     "gMean": 0.026485263451387357
+    },
+    "2-guard": {
+     "label": "Always Guard",
+     "hits": 0,
+     "n": 500,
+     "rate": 0.0,
+     "ub95": 0.005973551516349557,
+     "gMean": 0.04381160817060053
+    },
+    "2-burst": {
+     "label": "Always Burst",
+     "hits": 0,
+     "n": 500,
+     "rate": 0.0,
+     "ub95": 0.005973551516349557,
+     "gMean": 0.04914591329222496
+    },
+    "3": {
+     "label": "Uniform random",
+     "hits": 0,
+     "n": 500,
+     "rate": 0.0,
+     "ub95": 0.005973551516349557,
+     "gMean": 0.00042470201384266237
+    },
+    "4-switch": {
+     "label": "Habit switcher: Guard 100 rounds, then Burst",
+     "hits": 0,
+     "n": 500,
+     "rate": 0.0,
+     "ub95": 0.005973551516349557,
+     "gMean": 0.012918921341083571
+    },
+    "4-drift": {
+     "label": "Slow drifter: Guard drifting to Burst",
+     "hits": 0,
+     "n": 500,
+     "rate": 0.0,
+     "ub95": 0.005973551516349557,
+     "gMean": 0.0010712792254613235
+    },
+    "5-4": {
+     "label": "Periodic switching, every 4 rounds",
+     "hits": 0,
+     "n": 500,
+     "rate": 0.0,
+     "ub95": 0.005973551516349557,
+     "gMean": 0.00046970133110284164
+    },
+    "5-8": {
+     "label": "Periodic switching, every 8 rounds",
+     "hits": 0,
+     "n": 500,
+     "rate": 0.0,
+     "ub95": 0.005973551516349557,
+     "gMean": 0.000662008784667499
+    },
+    "5-16": {
+     "label": "Periodic switching, every 16 rounds",
+     "hits": 0,
+     "n": 500,
+     "rate": 0.0,
+     "ub95": 0.005973551516349557,
+     "gMean": 0.001124974746099371
+    },
+    "5-32": {
+     "label": "Periodic switching, every 32 rounds",
+     "hits": 0,
+     "n": 500,
+     "rate": 0.0,
+     "ub95": 0.005973551516349557,
+     "gMean": 0.0020360662554876033
+    },
+    "5-64": {
+     "label": "Periodic switching, every 64 rounds",
+     "hits": 0,
+     "n": 500,
+     "rate": 0.0,
+     "ub95": 0.005973551516349557,
+     "gMean": 0.0032859542592997386
+    },
+    "5-128": {
+     "label": "Periodic switching, every 128 rounds",
+     "hits": 0,
+     "n": 500,
+     "rate": 0.0,
+     "ub95": 0.005973551516349557,
+     "gMean": 0.004555552919125935
+    },
+    "5-256": {
+     "label": "Periodic switching, every 256 rounds",
+     "hits": 0,
+     "n": 500,
+     "rate": 0.0,
+     "ub95": 0.005973551516349557,
+     "gMean": 0.005206282713540046
+    },
+    "5": {
+     "label": "Periodic switching, worst period (4 rounds)",
+     "hits": 0,
+     "n": 500,
+     "rate": 0.0,
+     "ub95": 0.005973551516349557,
+     "gMean": 0.00046970133110284164
+    },
+    "6": {
+     "label": "Optimiser search over 100 market-independent schedules: best, re-tested",
+     "segment": 64,
+     "bestScreenRate": 0.0,
+     "hits": 0,
+     "n": 500,
+     "rate": 0.0,
+     "ub95": 0.005973551516349557,
+     "gMean": 0.0024371110930327565
+    },
+    "7": {
+     "label": "Staggered family of 20 bots, one human",
+     "hits": 0,
+     "n": 500,
+     "rate": 0.0,
+     "ub95": 0.005973551516349557,
+     "gMean": 0.0
+    },
+    "8": {
+     "label": "Selective reveal: forfeit every round that lost",
+     "hits": 0,
+     "n": 500,
+     "rate": 0.0,
+     "ub95": 0.005973551516349557,
+     "gMean": 0.21660849953978756
+    },
+    "15": {
+     "label": "Feed poisoning: only calm rounds settle, with habit switching",
+     "hits": 4,
+     "n": 500,
+     "rate": 0.008,
+     "ub95": 0.018212851796106527,
+     "gMean": 0.00024220777775438217
+    },
+    "15b": {
+     "label": "Feed poisoning: only wild rounds settle, with habit switching",
+     "hits": 0,
+     "n": 500,
+     "rate": 0.0,
+     "ub95": 0.005973551516349557,
+     "gMean": 0.0010896340029710597
+    }
+   },
+   "power": [
+    {
+     "strategy": "Regime reader (test days only)",
+     "k": 2,
+     "share": 0.005,
+     "n50": null,
+     "n90": null,
+     "n99": null,
+     "g": 0.0012667863405204378
+    },
+    {
+     "strategy": "Planted edge 5%",
+     "k": 2,
+     "share": 0.0,
+     "n50": null,
+     "n90": null,
+     "n99": null,
+     "g": 6.567585397290838e-05
+    },
+    {
+     "strategy": "Planted edge 10%",
+     "k": 2,
+     "share": 0.005,
+     "n50": null,
+     "n90": null,
+     "n99": null,
+     "g": 0.0010107167256470427
+    },
+    {
+     "strategy": "Planted edge 20%",
+     "k": 2,
+     "share": 0.605,
+     "n50": 2832,
+     "n90": null,
+     "n99": null,
+     "g": 0.006502658277300953
+    },
+    {
+     "strategy": "Planted edge 40%",
+     "k": 2,
+     "share": 1.0,
+     "n50": 1095,
+     "n90": 1351,
+     "n99": 1593,
+     "g": 0.032500473200963054
+    },
+    {
+     "strategy": "Regime reader (test days only)",
+     "k": 11,
+     "share": 0.0,
+     "n50": null,
+     "n90": null,
+     "n99": null,
+     "g": 0.001222401099264673
+    },
+    {
+     "strategy": "Planted edge 5%",
+     "k": 11,
+     "share": 0.0,
+     "n50": null,
+     "n90": null,
+     "n99": null,
+     "g": 6.169649358111383e-05
+    },
+    {
+     "strategy": "Planted edge 10%",
+     "k": 11,
+     "share": 0.0,
+     "n50": null,
+     "n90": null,
+     "n99": null,
+     "g": 0.0009799637288917331
+    },
+    {
+     "strategy": "Planted edge 20%",
+     "k": 11,
+     "share": 0.045,
+     "n50": null,
+     "n90": null,
+     "n99": null,
+     "g": 0.006533835370584826
+    },
+    {
+     "strategy": "Planted edge 40%",
+     "k": 11,
+     "share": 1.0,
+     "n50": 1592,
+     "n90": 1879,
+     "n99": 2022,
+     "g": 0.03220025390914165
+    }
+   ],
+   "betCompare": [
+    {
+     "edge": 0.05,
+     "bet": "ons",
+     "k": 2,
+     "share": 0.0,
+     "n50": null,
+     "n90": null,
+     "n99": null,
+     "g": 8.289110677095642e-05
+    },
+    {
+     "edge": 0.05,
+     "bet": "plugin",
+     "k": 2,
+     "share": 0.0,
+     "n50": null,
+     "n90": null,
+     "n99": null,
+     "g": 8.289110677095642e-05
+    },
+    {
+     "edge": 0.1,
+     "bet": "ons",
+     "k": 2,
+     "share": 0.0,
+     "n50": null,
+     "n90": null,
+     "n99": null,
+     "g": 0.0009981467743892163
+    },
+    {
+     "edge": 0.1,
+     "bet": "plugin",
+     "k": 2,
+     "share": 0.02,
+     "n50": null,
+     "n90": null,
+     "n99": null,
+     "g": 0.0009981467743892163
+    },
+    {
+     "edge": 0.2,
+     "bet": "ons",
+     "k": 2,
+     "share": 0.61,
+     "n50": 2845,
+     "n90": null,
+     "n99": null,
+     "g": 0.006552874366269562
+    },
+    {
+     "edge": 0.2,
+     "bet": "plugin",
+     "k": 2,
+     "share": 0.865,
+     "n50": 2354,
+     "n90": null,
+     "n99": null,
+     "g": 0.006552874366269562
+    },
+    {
+     "edge": 0.4,
+     "bet": "ons",
+     "k": 2,
+     "share": 1.0,
+     "n50": 1114,
+     "n90": 1295,
+     "n99": 1560,
+     "g": 0.032106980631757105
+    },
+    {
+     "edge": 0.4,
+     "bet": "plugin",
+     "k": 2,
+     "share": 1.0,
+     "n50": 976,
+     "n90": 1146,
+     "n99": 1437,
+     "g": 0.032106980631757105
+    }
+   ]
+  }
+ ]
+}

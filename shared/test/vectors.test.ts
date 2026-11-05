@@ -49,7 +49,6 @@ describe("referee vectors", () => {
             meanAbsShort: String(f.meanAbsShort),
             varReturn: String(f.varReturn),
             count: f.count,
-            lastT: Number(f.lastT),
           }).toEqual(s.feedAfter);
         } else {
           r.recordForfeit(s.a, s.kA);

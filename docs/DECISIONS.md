@@ -1,5 +1,9 @@
 # Decisions (newest on top)
 
+## 2026-11-05 21:55 IST
+- **Duels run on a shared slot grid, and each tape reaches the feed exactly once, in any settlement order.** Round starts are multiples of the tape length. The first quick validation run showed that if an attacker could choose which tapes reach the public averages, it could beat the 1% limit (feed poisoning). With a shared grid and a per-tape record, any tape a fighter is rated on always reaches the feed, so that choice no longer exists.
+- **The plan's "robust to habit drift" claim did not survive measurement.** A market-blind Guard/Burst switcher reached 6% false-Skilled at the plan's settings with no allowance (κ = 0), against the 1% limit. Horizons and κ are being recalibrated from real data. Results go in `docs/reports/referee-validation.md`.
+
 ## 2026-11-05 21:50 IST
 - **Rounds are retimed for Ethereum Sepolia.** Measured over 60 blocks: 58 gaps of 12 s and one of 24 s. An anchor must land before the bell, so the old 2 s margin would make honest fighters forfeit. New timing: 36 s contiguous tapes (3 blocks), 10 s commit, 26 s anchor margin. Each round's commit window sits inside the previous round's tape. One Pyth update serves as both a round's end and the next round's start, as the PLAN suggests. Expect about 75 rated rounds per hour per fighter, not the PLAN's 120, so the Fri 12:00 gate must use this rate.
 - **Each fighter may be in only one active duel, enforced onchain.** New attack found while reasoning: play four overlapping duels with all four moves, settle the winning one first, and have only that one rated. Rating duplicates on one tape is also unsound, because repeated bets on one price move break the supermartingale. The practice build enforced this per family in the server only.

@@ -1,4 +1,4 @@
-.PHONY: install test test-py test-ts test-sol vectors lint-hardcode check-config fork deploy recompute e2e secrets
+.PHONY: validate validate-quick install test test-py test-ts test-sol vectors lint-hardcode check-config fork deploy recompute e2e secrets
 
 install:
 	git submodule update --init --recursive
@@ -44,3 +44,9 @@ e2e:
 
 secrets:
 	gitleaks detect --no-banner --redact --source .
+
+validate-quick:
+	cd engine && uv run python -m sim.attacks --quick
+
+validate:
+	cd engine && uv run python -m sim.attacks --calibrate

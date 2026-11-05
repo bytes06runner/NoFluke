@@ -33,7 +33,6 @@ contract Referee is IReferee {
         int128 meanAbsShort;
         uint256 varReturn;
         uint64 count;
-        uint64 lastT;
         bool known;
     }
 
@@ -56,7 +55,6 @@ contract Referee is IReferee {
         int256 meanAbsShort;
         uint256 varReturn;
         uint64 count;
-        uint64 lastT;
     }
 
     /// @dev One round's inputs. Both fighters read the feed state from before the round.
@@ -94,6 +92,7 @@ contract Referee is IReferee {
     mapping(address => Fighter) private _fighters;
     mapping(bytes32 => Feed) private _feeds;
     mapping(bytes32 => address[]) private _ranked;
+    mapping(bytes32 => mapping(uint256 => bool)) private _tapeSeen;
 
     modifier onlyArena() {
         if (msg.sender != arena) revert NotArena();
@@ -155,7 +154,7 @@ contract Referee is IReferee {
         RoundCtx memory ctx = _context(feedId, p0, p1, c);
         _update(fighterA, moveA, ctx);
         _update(fighterB, moveB, ctx);
-        _updateFeed(_feeds[feedId], tStart, ctx.r, ctx.z);
+        _updateFeed(feedId, tStart, ctx.r, ctx.z);
     }
 
     /// @inheritdoc IReferee
@@ -198,7 +197,7 @@ contract Referee is IReferee {
 
     function feedState(bytes32 feedId) external view returns (FeedView memory) {
         Feed storage f = _feeds[feedId];
-        return FeedView(f.meanZ, f.meanAbs, f.meanZShort, f.meanAbsShort, f.varReturn, f.count, f.lastT);
+        return FeedView(f.meanZ, f.meanAbs, f.meanZShort, f.meanAbsShort, f.varReturn, f.count);
     }
 
     function _context(bytes32 feedId, int256 p0, int256 p1, int256 c) private view returns (RoundCtx memory ctx) {
@@ -326,9 +325,12 @@ contract Referee is IReferee {
         if (s.kAtCert > 0) _rerank(ctx.feedId, fighter, s);
     }
 
-    function _updateFeed(Feed storage f, uint64 t, int256 r, int256 z) private {
-        // Once per tape, so many duels on one tape cannot overweight a single price move.
-        if (f.count > 0 && t < f.lastT + TAPE_S) return;
+    function _updateFeed(bytes32 feedId, uint64 t, int256 r, int256 z) private {
+        // Exactly once per tape, in any settlement order: a rated round's tape always reaches the feed.
+        uint256 tape = t / TAPE_S;
+        if (_tapeSeen[feedId][tape]) return;
+        _tapeSeen[feedId][tape] = true;
+        Feed storage f = _feeds[feedId];
         int256 zc = _clip(z, -Z_CLIP, Z_CLIP);
         int256 a = _abs(zc);
         uint64 count = f.count + 1;
@@ -341,7 +343,6 @@ contract Referee is IReferee {
         int256 var_ = int256(f.varReturn);
         f.varReturn = uint256(var_ + ((r * r) / WAD - var_) / SIGMA_HORIZON);
         f.count = count;
-        f.lastT = t;
     }
 
     function _gap(address fighter) private view returns (int256) {

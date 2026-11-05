@@ -308,7 +308,14 @@
         "optimiserCandidates",
         "staggeredFamilySize",
         "gMinWad",
-        "rngSeed"
+        "rngSeed",
+        "dataBaseUrl",
+        "dataEndDate",
+        "matchGapS",
+        "decisionLeadS",
+        "powerRounds",
+        "plantedEdgesPct",
+        "kappaGridPct"
       ],
       "properties": {
         "seeds": {
@@ -337,6 +344,35 @@
         },
         "rngSeed": {
           "$ref": "#/definitions/posInt"
+        },
+        "dataBaseUrl": {
+          "type": "string",
+          "pattern": "^https://"
+        },
+        "dataEndDate": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+        },
+        "matchGapS": {
+          "$ref": "#/definitions/posInt"
+        },
+        "decisionLeadS": {
+          "$ref": "#/definitions/posInt"
+        },
+        "powerRounds": {
+          "$ref": "#/definitions/posInt"
+        },
+        "plantedEdgesPct": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        },
+        "kappaGridPct": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
         }
       }
     }

@@ -21,7 +21,7 @@ contract RefereeTest is Test {
     address a = address(0xA);
     address b = address(0xB);
     address c = address(0xC);
-    uint64 t = 1_800_000_000;
+    uint64 t = 50_000_000 * 36;
 
     function setUp() public {
         string memory j = ConfigReader.params();
@@ -104,13 +104,20 @@ contract RefereeTest is Test {
         s[0] = sigmaInit;
     }
 
-    function test_feedUpdatesOncePerTape() public {
+    function test_feedUpdatesExactlyOncePerTape() public {
         ref.recordRound(feed, t, P0, P0 + P0 / 1000, 486e15, a, UP, b, DOWN);
         Referee.FeedView memory once = ref.feedState(feed);
-        ref.recordRound(feed, t + p.tapeS - 1, P0, P0 + P0 / 1000, 486e15, c, UP, b, DOWN);
+        ref.recordRound(feed, t, P0, P0 + P0 / 1000, 486e15, c, UP, b, DOWN);
         assertEq(keccak256(abi.encode(ref.feedState(feed))), keccak256(abi.encode(once)));
         ref.recordRound(feed, t + p.tapeS, P0, P0 + P0 / 1000, 486e15, c, UP, b, DOWN);
         assertEq(ref.feedState(feed).count, once.count + 1);
+    }
+
+    function test_ratedRoundReachesFeedInAnySettlementOrder() public {
+        ref.recordRound(feed, t + 10 * p.tapeS, P0, P0 + P0 / 1000, 486e15, a, UP, b, DOWN);
+        uint64 count = ref.feedState(feed).count;
+        ref.recordRound(feed, t, P0, P0 + P0 / 1000, 486e15, a, UP, b, DOWN);
+        assertEq(ref.feedState(feed).count, count + 1);
     }
 
     function test_siblingRaisesBarImmediately() public {

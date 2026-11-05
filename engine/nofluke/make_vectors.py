@@ -8,7 +8,7 @@ from .referee import BURST, DOWN, GUARD, UP, WAD, Referee, ln_wad
 
 OUT = Path(__file__).resolve().parents[2] / "shared" / "vectors" / "referee.json"
 FLAT = OUT.with_name("referee-flat.json")
-FLAT_WIDTH = 12 + 2 * 15 + 7
+FLAT_WIDTH = 12 + 2 * 15 + 6
 P0 = 10_000_000_000
 LN_CASES = [1, 2, 999, 10**6, 10**9, WAD // 3, WAD // 2, WAD - 1, WAD, WAD + 1, 3 * WAD // 2, 2 * WAD, 3 * WAD, 600 * WAD, 132 * 100 * WAD, 10**30, 10**40, 2**255 - 1]
 
@@ -35,7 +35,6 @@ def feed_json(f):
         "meanAbsShort": str(f.mean_abs_short),
         "varReturn": str(f.var_return),
         "count": f.count,
-        "lastT": f.last_t,
     }
 
 
@@ -45,7 +44,7 @@ class History:
     def __init__(self, name, params, feed):
         self.name, self.ref, self.feed, self.steps = name, Referee(params), feed, []
         self.p = params
-        self.t = 1_800_000_000
+        self.t = 50_000_000 * params.tape_s
 
     def round(self, a, move_a, k_a, b, move_b, k_b, z, advance=True):
         sigma = self.ref.sigma_wad(self.feed)
@@ -164,7 +163,7 @@ def flatten(data, params):
                 row += ["2", "0", "0", "0", "0", "0", who[s["a"]], "0", str(s["kA"]), "0", "0", "0"]
                 fa = None
             row += _fighter_row(f.get("A")) + _fighter_row(f.get("B"))
-            row += ["0"] * 7 if fa is None else [fa["meanZ"], fa["meanAbs"], fa["meanZShort"], fa["meanAbsShort"], fa["varReturn"], str(fa["count"]), str(fa["lastT"])]
+            row += ["0"] * 6 if fa is None else [fa["meanZ"], fa["meanAbs"], fa["meanZShort"], fa["meanAbsShort"], fa["varReturn"], str(fa["count"])]
         out.append(row)
     return {
         "width": FLAT_WIDTH,

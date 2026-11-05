@@ -44,7 +44,7 @@ def ln_wad(x: int) -> int:
     r |= (1 << 5) * ((x >> r) > 0xFFFFFFFF)
     r |= (1 << 4) * ((x >> r) > 0xFFFF)
     r |= (1 << 3) * ((x >> r) > 0xFF)
-    table = 0xF8F9F9FAF9FDFAFBF9FDFCFDFAFBFCFEF9FAFDFAFCFCFBFEFAFAFCFBFFFFFFFF
+    table = 0xF8F9F9FAF9FDFAFBF9FDFCFDFAFBFCFEF9FAFDFAFCFCFBFEFAFAFCFBFFFFFFFF  # lint-hardcode-ok: Solady lookup table
     idx = (0x8421084210842108CC6318C6DB6D54BE >> (x >> r)) & 0x1F if (x >> r) < 256 else 0
     r ^= _byte(idx, table)
     x = (((x << r) % _MOD) >> 159)

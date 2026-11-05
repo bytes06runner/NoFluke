@@ -18,10 +18,11 @@ test-sol:
 
 # The same referee vectors must pass in Python, TypeScript and Solidity.
 vectors:
+	cd engine && uv run python -m nofluke.make_fight_vectors
 	cd engine && uv run python -m nofluke.make_vectors
-	cd engine && uv run pytest -q tests/test_vectors.py
-	pnpm --filter @nofluke/shared exec vitest run test/vectors.test.ts
-	cd contracts && forge test --match-contract Vectors
+	cd engine && uv run pytest -q tests/test_vectors.py tests/test_fightmath.py
+	pnpm --filter @nofluke/shared exec vitest run
+	cd contracts && forge test --match-contract "Vectors"
 
 lint-hardcode:
 	node scripts/lint-hardcode.mjs

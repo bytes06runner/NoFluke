@@ -16,3 +16,4 @@ contracts/broadcast/*/31337/
 coverage/
 playwright-report/
 test-results/
+engine/data/

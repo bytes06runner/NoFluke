@@ -29,6 +29,7 @@ class FastParams:
     lapse_a: float
     lapse_edge_floor: float
     sigma_floor: float
+    a0: float = 1.0
 
     @staticmethod
     def of(p) -> "FastParams":
@@ -121,7 +122,7 @@ def run_career(p: FastParams, paths: FeedPaths, moves: np.ndarray, k, c: float, 
     counts_s = np.zeros((n, 4))
     log_w = np.zeros(n)
     lam = np.zeros(n)
-    A = np.ones(n)
+    A = np.full(n, p.a0)
     log_l = np.zeros(n)
     crossed_at = np.full(n, -1)
     lapsed_at = np.full(n, -1)

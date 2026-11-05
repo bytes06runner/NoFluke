@@ -14,12 +14,23 @@ from .fast import BURST, DOWN, GUARD, UP, WAD, FastParams, feed_paths, run_caree
 from .tapes import load_tape, plain_returns, sample_careers
 
 REPORTS = Path(__file__).resolve().parents[2] / "docs" / "reports"
-ALPHA = None  # set from params in main
 
 
 def upper95(hits: int, n: int) -> float:
     """Clopper-Pearson one-sided 95% upper bound."""
     return 1.0 if hits >= n else float(beta.ppf(0.95, hits + 1, n - hits))
+
+
+def rolling_abs_returns(close, lookbacks):
+    """Mean absolute 1 s log return over each look-back, ending at each second."""
+    abs_ret = np.abs(np.diff(np.log(close), prepend=np.log(close[0])))
+    total = np.cumsum(abs_ret)
+    out = []
+    for w in lookbacks:
+        f = np.zeros(len(close))
+        f[w:] = (total[w:] - total[:-w]) / w
+        out.append(f)
+    return out
 
 
 class World:
@@ -43,25 +54,33 @@ class World:
         self.sigma_fit = float(rets.std())
         # The storm line is fitted on the referee's own z scale, on fit days only.
         self.c = factor * float(np.mean(np.abs(rets / self.sigma_fit)))
+        self.features = rolling_abs_returns(self.tape.close, raw["storm"]["forecastLookbacksS"])
         self.theta = self._fit_theta()
 
     def careers(self, rng, n, rounds, lo=0.0, hi=1.0):
-        returns, storm, _ = sample_careers(self.tape, rng, n, rounds, self.tape_s, self.per_match, self.gap_s, self.lead_s, lo, hi)
-        return returns, storm
+        returns, storm, t0 = sample_careers(self.tape, rng, n, rounds, self.tape_s, self.per_match, self.gap_s, self.lead_s, lo, hi)
+        signals = np.stack([f[t0 - self.lead_s] * np.sqrt(self.tape_s) for f in self.features], axis=-1)
+        return returns, storm, signals
 
     def _fit_theta(self) -> float:
+        """The single-signal reader's threshold: the median on fit days, so its habits stay balanced."""
         rng = np.random.default_rng(self.params.raw["validation"]["rngSeed"])
-        returns, storm = self.careers(rng, 2000, 200, 0.0, self.fit_share)
-        z = returns / self.sigma_fit
-        signal = storm / self.sigma_fit
-        gain = 10 * (np.abs(np.clip(z, -3, 3)) - self.c)  # Burst minus the storm line; Guard is its mirror
-        best, best_score = 0.0, -np.inf
-        for q in np.linspace(0.1, 0.9, 33):
-            th = float(np.quantile(signal, q))
-            score = float(np.mean(np.where(signal > th, gain, -gain)))
-            if score > best_score:
-                best, best_score = th, score
-        return best
+        returns, storm, signals = self.careers(rng, 1500, 500, 0.0, self.fit_share)
+        paths = feed_paths(self.fp, returns, self.c, self.sigma_init)
+        self.beta = self._fit_forecast(paths, signals)
+        forecast = self.forecast(paths, signals)
+        self.forecast_median = float(np.median(forecast))
+        return float(np.median(storm / paths.sigma))
+
+    def _fit_forecast(self, paths, signals) -> np.ndarray:
+        """Least squares of the next round's |z| on the signals divided by sigma, on fit days only."""
+        scaled = (signals / paths.sigma[..., None]).reshape(-1, signals.shape[-1])
+        design = np.column_stack([scaled, np.ones(len(scaled))])
+        target = np.abs(np.clip(paths.z, -self.fp.z_clip, self.fp.z_clip)).ravel()
+        return np.linalg.lstsq(design, target, rcond=None)[0]
+
+    def forecast(self, paths, signals) -> np.ndarray:
+        return (signals / paths.sigma[..., None]) @ self.beta[:-1] + self.beta[-1]
 
 
 def moves_constant(n, t, move):
@@ -104,8 +123,7 @@ class Runner:
         self.seed0 = world.params.raw["validation"]["rngSeed"]
         fp = world.fp
         if kappa is not None:
-            max_x = 2 * fp.payoff_per_z * fp.z_clip + 2 * fp.delta + kappa * 2 * 2 * fp.delta
-            fp = replace(fp, kappa=kappa, m=max_x)
+            fp = replace(fp, kappa=kappa)
         self.fp = fp
 
     def rng(self, salt):
@@ -114,15 +132,14 @@ class Runner:
     def paths(self, rng, n=None, rounds=None, lo=0.0, hi=1.0, mask_fn=None):
         n = n or self.seeds
         rounds = rounds or self.rounds
-        returns, storm = self.w.careers(rng, n, rounds, lo, hi)
-        mask = None if mask_fn is None else mask_fn(returns)
-        return feed_paths(self.fp, returns, self.w.c, self.w.sigma_init, mask), storm
+        returns, storm, signals = self.w.careers(rng, n, rounds, lo, hi)
+        return feed_paths(self.fp, returns, self.w.c, self.w.sigma_init), (storm, signals)
 
-    def false_rate(self, salt, make_moves, k=2, forfeit_fn=None, mask_fn=None, n=None, rounds=None):
+    def false_rate(self, salt, make_moves, k=2, forfeit_fn=None, n=None, rounds=None):
         rng = self.rng(salt)
         n = n or self.seeds
         rounds = rounds or self.rounds
-        paths, _ = self.paths(rng, n, rounds, mask_fn=mask_fn)
+        paths, _ = self.paths(rng, n, rounds)
         moves = make_moves(rng, n, rounds)
         forfeit = None if forfeit_fn is None else forfeit_fn(paths, moves)
         c = run_career(self.fp, paths, moves, k, self.w.c, forfeit=forfeit)
@@ -153,8 +170,8 @@ def attack_table(run: Runner, optimiser_candidates: int, family_size: int):
     table["6"] = optimiser(r, optimiser_candidates)
     table["7"] = staggered_family(r, family_size)
     add("8", "Selective reveal: forfeit every round that lost", r.false_rate(8, lambda g, n, t: moves_uniform(g, n, t), forfeit_fn=_selective_forfeit))
-    add("15", "Feed poisoning: only calm rounds settle, with habit switching", r.false_rate(15, lambda g, n, t: moves_periodic(n, t, 16), mask_fn=_calm_only))
-    add("15b", "Feed poisoning: only wild rounds settle, with habit switching", r.false_rate(16, lambda g, n, t: moves_periodic(n, t, 16), mask_fn=_wild_only))
+    worst_period = int(table["5"]["label"].split("(")[1].split(" ")[0])
+    add("5-long", f"Periodic switching, worst period, twice the career length", r.false_rate(17, lambda g, n, t: moves_periodic(n, t, worst_period), rounds=2 * r.rounds))
     return table
 
 
@@ -164,16 +181,6 @@ def _selective_forfeit(paths, moves):
     pay = np.stack([10 * z, -10 * z, -10 * np.abs(z), 10 * np.abs(z)], axis=-1)
     own = np.take_along_axis(pay, moves[..., None], axis=-1)[..., 0]
     return own - pay.mean(-1) < 0
-
-
-def _calm_only(returns):
-    a = np.abs(returns)
-    return a < np.median(a)
-
-
-def _wild_only(returns):
-    a = np.abs(returns)
-    return a > np.median(a)
 
 
 def optimiser(r: Runner, candidates: int):
@@ -241,8 +248,8 @@ def quantile_or_none(crossed, q):
 
 def power_row(r: Runner, moves_fn, k, salt, rounds, n, lo=0.0, hi=1.0, bet="ons"):
     rng = r.rng(salt)
-    paths, storm = r.paths(rng, n, rounds, lo, hi)
-    moves = moves_fn(rng, paths, storm)
+    paths, signals = r.paths(rng, n, rounds, lo, hi)
+    moves = moves_fn(rng, paths, signals)
     c = run_career(r.fp, paths, moves, k, r.w.c, bet=bet)
     return {
         "k": k,
@@ -258,11 +265,15 @@ def power_table(r: Runner, edges, power_rounds, n):
     w = r.w
     rows = []
 
-    def regime(rng, paths, storm):
-        return np.where(storm / np.maximum(paths.sigma, 1e-12) > w.theta, BURST, GUARD)
+    def single(rng, paths, x):
+        return np.where(x[0] / np.maximum(paths.sigma, 1e-12) > w.theta, BURST, GUARD)
+
+    def multi(rng, paths, x):
+        return np.where(w.forecast(paths, x[1]) > w.forecast_median, BURST, GUARD)
 
     for k in (2, 11):
-        rows.append({"strategy": "Regime reader (test days only)", **power_row(r, regime, k, 100 + k, power_rounds, n, w.fit_share, 1.0)})
+        rows.append({"strategy": "Single-signal storm reader (test days only)", **power_row(r, single, k, 100 + k, power_rounds, n, w.fit_share, 1.0)})
+        rows.append({"strategy": "Multi-signal storm reader (test days only)", **power_row(r, multi, k, 150 + k, power_rounds, n, w.fit_share, 1.0)})
         for e in edges:
             rows.append({"strategy": f"Planted edge {e:.0%}", **power_row(r, lambda g, p, s, x=e: planted_moves(g, p, w.c, x), k, 200 + k + int(e * 1000), power_rounds, n)})
     compare = []
@@ -270,6 +281,28 @@ def power_table(r: Runner, edges, power_rounds, n):
         for bet in ("ons", "plugin"):
             compare.append({"edge": e, "bet": bet, **power_row(r, lambda g, p, s, x=e: planted_moves(g, p, w.c, x), 2, 300 + int(e * 1000), power_rounds, n, bet=bet)})
     return rows, compare
+
+
+def lapse_table(r: Runner, edge, rounds, n):
+    """The detector should fire when a real edge stops, and stay quiet while it continues."""
+    w = r.w
+    rng = r.rng(800)
+    paths, _ = r.paths(rng, n, rounds)
+    keep = planted_moves(rng, paths, w.c, edge)
+    switch_at = rounds // 2
+    coin = np.where(rng.random(keep.shape) < 0.5, BURST, GUARD)
+    stops = keep.copy()
+    stops[:, switch_at:] = coin[:, switch_at:]
+    against = keep.copy()
+    against[:, switch_at:] = np.where(np.abs(paths.z[:, switch_at:]) > w.c, GUARD, BURST)
+    out = []
+    for label, moves in (("Edge continues", keep), ("Edge stops halfway (coin flips)", stops), ("Edge turns negative halfway", against)):
+        c = run_career(r.fp, paths, moves, 2, w.c)
+        cert = c.crossed_at >= 0
+        lapsed = c.lapsed_at >= 0
+        after = c.lapsed_at[lapsed] - switch_at
+        out.append({"label": label, "certified": float(cert.mean()), "lapsed": float(lapsed.sum() / max(cert.sum(), 1)), "medianAfterSwitch": None if not len(after) else int(np.median(after))})
+    return out
 
 
 def calibrate_kappa(world, seeds, rounds, kappas, edges, power_rounds, power_n):
@@ -284,7 +317,7 @@ def calibrate_kappa(world, seeds, rounds, kappas, edges, power_rounds, power_n):
         for period in (4, 8, 16, 32, 64, 128, 256):
             res[f"p{period}"] = r.false_rate(6 + period, lambda g, n, t, p=period: moves_periodic(n, t, p))
         worst = max(res.values(), key=lambda x: x["ub95"])
-        power = power_row(r, lambda g, p, s, x=edges[1]: planted_moves(g, p, world.c, x), 2, 400, power_rounds, power_n)
+        power = power_row(r, lambda g, p, s, x=edges[2]: planted_moves(g, p, world.c, x), 2, 400, power_rounds, power_n)
         out.append({"kappa": kappa, "m": r.fp.m, "worstUb95": worst["ub95"], "worstRate": worst["rate"], "plantedN90": power["n90"], "plantedShare": power["share"], "g": power["g"]})
         print(f"  kappa {kappa}: worst ub95 {worst['ub95']:.4f}, planted n90 {power['n90']}, share {power['share']:.3f}", flush=True)
     return out
@@ -306,10 +339,10 @@ def render(results, alpha, quick, elapsed):
         "",
     ]
     for feed in results["feeds"]:
-        lines += [f"## {feed['slug'].upper()}", "", f"Storm line fitted on the fit days: C = {feed['c']:.3f}. Regime threshold: {feed['theta']:.3f}.", ""]
+        lines += [f"## {feed['slug'].upper()}", "", f"Fitted on the fit days only: storm line C = {feed['c']:.3f}, single-signal threshold {feed['theta']:.3f}, forecast weights {[round(x, 3) for x in feed['beta']]}, forecast median {feed['forecastMedian']:.3f}.", ""]
         lines += [f"### False-Skilled rate, target at most {fmt_pct(alpha)} at the 95% upper bound", "", "| # | Attack | Certified | Rate | 95% upper bound | Result |", "| --- | --- | --- | --- | --- | --- |"]
         for key, row in feed["attacks"].items():
-            if "-" in key and key.split("-")[0] == "5":
+            if key.startswith("5-") and key != "5-long":
                 continue
             ok = "PASS" if row["ub95"] <= alpha else "**FAIL**"
             lines.append(f"| {key} | {row['label']} | {row['hits']}/{row['n']} | {fmt_pct(row['rate'])} | {fmt_pct(row['ub95'])} | {ok} |")
@@ -317,6 +350,10 @@ def render(results, alpha, quick, elapsed):
         for row in feed["power"]:
             d = lambda v: "–" if v is None else str(v)
             lines.append(f"| {row['strategy']} | {row['k']} | {fmt_pct(row['share'])} | {d(row['n50'])} | {d(row['n90'])} | {d(row['n99'])} | {row['g']:.5f} |")
+        lines += ["", "### Lapse detector", "", "| Case | Certified | Of those, lapsed | Median rounds to lapse after the change |", "| --- | --- | --- | --- |"]
+        for row in feed["lapse"]:
+            med = "–" if row["medianAfterSwitch"] is None else row["medianAfterSwitch"]
+            lines.append(f"| {row['label']} | {fmt_pct(row['certified'])} | {fmt_pct(row['lapsed'])} | {med} |")
         lines += ["", "### ONS against the plug-in bet, same seeds, K = 2", "", "| Planted edge | Bet | Certified | N50 | N90 |", "| --- | --- | --- | --- | --- |"]
         for row in feed["betCompare"]:
             d = lambda v: "–" if v is None else str(v)
@@ -343,12 +380,31 @@ def render(results, alpha, quick, elapsed):
     return "\n".join(lines)
 
 
+def a_elapsed(feeds):
+    return max((f.get("elapsedS", 0) for f in feeds), default=0)
+
+
+def merge(stem):
+    """Combines per-feed results written by parallel runs."""
+    found = sorted(REPORTS.glob(f"{stem}-*.json"))
+    return [json.loads(p.read_text())["feeds"][0] for p in found]
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--quick", action="store_true")
     ap.add_argument("--feeds", default=None, help="comma-separated slugs")
     ap.add_argument("--calibrate", action="store_true")
+    ap.add_argument("--merge", action="store_true", help="combine per-feed runs into one report")
     a = ap.parse_args()
+    if a.merge:
+        stem = "referee-validation"
+        feeds = merge(stem)
+        alpha = 1 / load_params().alpha_inv
+        results = {"seeds": feeds and load_params().raw["validation"]["seeds"], "quick": False, "feeds": feeds}
+        (REPORTS / f"{stem}.json").write_text(json.dumps(results, indent=1) + "\n")
+        (REPORTS / f"{stem}.md").write_text(render(results, alpha, False, a_elapsed(feeds)) + "\n")
+        return
     params = load_params()
     raw = params.raw
     v = raw["validation"]
@@ -366,7 +422,7 @@ def main():
             continue
         world = World(params, e["slug"], e["id"])
         print(f"{e['slug']}: C {world.c:.3f}, theta {world.theta:.3f}", flush=True)
-        feed = {"slug": e["slug"], "c": world.c, "theta": world.theta}
+        feed = {"slug": e["slug"], "c": world.c, "theta": world.theta, "beta": world.beta.tolist(), "forecastMedian": world.forecast_median}
         if a.calibrate:
             feed["kappa"] = calibrate_kappa(world, seeds, v["roundsPerCareer"], [x / 100 for x in v["kappaGridPct"]], edges, v["powerRounds"], power_n)
         run = Runner(world, seeds, v["roundsPerCareer"])
@@ -374,14 +430,19 @@ def main():
         for key, row in feed["attacks"].items():
             print(f"  {key}: {row['hits']}/{row['n']} ub95 {row['ub95']:.4f}", flush=True)
         feed["power"], feed["betCompare"] = power_table(run, edges, v["powerRounds"], power_n)
+        feed["lapse"] = lapse_table(run, edges[-1], v["powerRounds"], power_n)
         for row in feed["power"]:
             print(f"  {row['strategy']} k={row['k']}: {row['share']:.3f} n50 {row['n50']} n90 {row['n90']} n99 {row['n99']} g {row['g']:.5f}", flush=True)
         results["feeds"].append(feed)
     elapsed = time.time() - t0
     REPORTS.mkdir(parents=True, exist_ok=True)
+    results["feeds"][0]["elapsedS"] = elapsed
     stem = "referee-validation-quick" if a.quick else "referee-validation"
+    if a.feeds and not a.quick:
+        stem = f"{stem}-{a.feeds.replace(',', '_')}"
     (REPORTS / f"{stem}.json").write_text(json.dumps(results, indent=1) + "\n")
-    (REPORTS / f"{stem}.md").write_text(render(results, alpha, a.quick, elapsed) + "\n")
+    if not (a.feeds and not a.quick):
+        (REPORTS / f"{stem}.md").write_text(render(results, alpha, a.quick, elapsed) + "\n")
     print(f"done in {elapsed / 60:.1f} min")
 
 

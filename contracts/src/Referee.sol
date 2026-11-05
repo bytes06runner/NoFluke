@@ -105,7 +105,7 @@ contract Referee is IReferee {
             arena_ == address(0) || address(family_) == address(0) || p.alphaInv == 0 || p.habitHorizon < 2
                 || p.habitShortHorizon < 2 || p.habitShortHorizon >= p.habitHorizon || p.meanHorizon == 0
                 || p.meanShortHorizon == 0 || p.meanShortHorizon >= p.meanHorizon || p.sigmaHorizon == 0 || p.m <= 0
-                || p.zClip <= 0 || p.delta <= 0 || p.lambdaMax > uint256(WAD) / 2 || p.lapseLambda >= uint256(WAD) / 2
+                || p.zClip <= 0 || p.delta <= 0 || p.lambdaMax >= uint256(WAD) || p.lapseLambda >= uint256(WAD) / 2
                 || p.lapseA < 2 || p.tapeS == 0 || p.rankDepth == 0 || p.sigmaMinPpm == 0
                 || feedIds.length != sigmaInitPpm.length
         ) revert BadParams();

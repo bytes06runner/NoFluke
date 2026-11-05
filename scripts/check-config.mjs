@@ -21,21 +21,18 @@ for (const [file, schema] of pairs) {
 const p = read("params.json");
 const WAD = 10n ** 18n;
 const r = p.referee;
-// M must cover the largest |x'|: payoff gap + 2Δ + κ·(max d)·(max e), so the clip on v never binds.
+// M must cover the largest |x|, so the clip on v never raises a loss. The drift penalty may clip, but only ever lowers v.
 const zClip = BigInt(r.zClipWad);
 const delta = BigInt(r.deltaPointsWad);
-const maxGap = (2n * BigInt(p.match.payoffPerZ) * zClip);
-const maxD = 2n * WAD;
-const maxE = 2n * delta;
-const maxAbsX = maxGap + 2n * delta + (((BigInt(r.kappaWad) * maxD) / WAD) * maxE) / WAD;
-if (BigInt(r.mPointsWad) < maxAbsX) problems.push(`referee.mPointsWad ${r.mPointsWad} is below the largest |x'| ${maxAbsX}`);
-if (BigInt(r.lambdaMaxWad) > WAD / 2n) problems.push("referee.lambdaMaxWad above 1/2 breaks the ONS regret bound");
+const maxAbsX = 2n * BigInt(p.match.payoffPerZ) * zClip + 2n * delta;
+if (BigInt(r.mPointsWad) < maxAbsX) problems.push(`referee.mPointsWad ${r.mPointsWad} is below the largest |x| ${maxAbsX}`);
+if (BigInt(r.lambdaMaxWad) >= WAD) problems.push("referee.lambdaMaxWad must stay below 1, or a full loss would wipe out wealth");
 if (r.habitShortHorizon >= r.habitHorizon) problems.push("referee.habitShortHorizon must be below habitHorizon");
 if (r.meanShortHorizon >= r.meanHorizon) problems.push("referee.meanShortHorizon must be below meanHorizon");
 const t = p.timing;
 // Tapes are contiguous, so a round's commit and anchor window sits inside the previous round's tape.
 if (t.commitS + t.anchorMarginS > t.slotS) problems.push("timing: commit + anchor margin must fit in one slot");
-if (t.tapeS > t.slotS) problems.push("timing: the tape must fit in one slot");
+if (t.tapeS !== t.slotS) problems.push("timing: tapes are contiguous, so the tape must equal the slot");
 if (t.priceWindowS > t.revealGraceS) problems.push("timing: price window must not exceed the reveal grace");
 if (t.settleGraceS >= t.refundGraceS) problems.push("timing: settle grace must be below the refund grace");
 for (const name of p.feeds.order) if (!p.feeds.entries[name]) problems.push(`feeds.order names unknown feed ${name}`);

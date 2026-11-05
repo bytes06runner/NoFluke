@@ -49,4 +49,5 @@ validate-quick:
 	cd engine && uv run python -m sim.attacks --quick
 
 validate:
-	cd engine && uv run python -m sim.attacks --calibrate
+	cd engine && for f in btc eth sol; do uv run python -m sim.attacks --calibrate --feeds $$f & done; wait
+	cd engine && uv run python -m sim.attacks --merge

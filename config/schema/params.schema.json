@@ -121,7 +121,8 @@
       "required": [
         "lookbackS",
         "minSamplesS",
-        "breakpointFactorWad"
+        "breakpointFactorWad",
+        "forecastLookbacksS"
       ],
       "properties": {
         "lookbackS": {
@@ -132,6 +133,13 @@
         },
         "breakpointFactorWad": {
           "$ref": "#/definitions/uintStr"
+        },
+        "forecastLookbacksS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/posInt"
+          },
+          "minItems": 1
         }
       }
     },

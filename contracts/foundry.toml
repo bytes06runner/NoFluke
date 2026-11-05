@@ -9,6 +9,7 @@ evm_version = "cancun"
 optimizer = true
 optimizer_runs = 200
 via_ir = false
+allow_paths = ["../node_modules"]
 fs_permissions = [{ access = "read", path = "../config" }, { access = "read", path = "../shared/vectors" }]
 
 [fuzz]

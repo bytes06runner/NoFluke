@@ -177,7 +177,7 @@ contract RefereeTest is Test {
 
     function test_constructorRejectsBadParams() public {
         IReferee.Params memory bad = p;
-        bad.lambdaMax = 6e17;
+        bad.lambdaMax = 1e18;
         vm.expectRevert(IReferee.BadParams.selector);
         new Referee(address(this), family, bad, _ids(), _sigmas());
     }

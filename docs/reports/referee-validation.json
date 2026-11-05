@@ -1,0 +1,1290 @@
+{
+ "seeds": 10000,
+ "quick": false,
+ "feeds": [
+  {
+   "slug": "btc",
+   "c": 0.4343661087883433,
+   "theta": 0.15802003345444826,
+   "beta": [
+    0.10950291287673607,
+    0.27428737687171545,
+    0.5222216578503706,
+    0.20972999644600493,
+    0.44721003340485105
+   ],
+   "forecastMedian": 0.6373211858395298,
+   "kappa": [
+    {
+     "kappa": 0.0,
+     "m": 80.0,
+     "worstUb95": 0.0007751813790100997,
+     "worstRate": 0.0003,
+     "plantedN90": 1755,
+     "plantedShare": 0.9995,
+     "g": 0.009079088386360968
+    },
+    {
+     "kappa": 0.1,
+     "m": 80.0,
+     "worstUb95": 0.0006294441486871455,
+     "worstRate": 0.0002,
+     "plantedN90": 1827,
+     "plantedShare": 0.9995,
+     "g": 0.008602160940835072
+    },
+    {
+     "kappa": 0.25,
+     "m": 80.0,
+     "worstUb95": 0.00029952835977661195,
+     "worstRate": 0.0,
+     "plantedN90": 1928,
+     "plantedShare": 0.9995,
+     "g": 0.007909533811087242
+    },
+    {
+     "kappa": 0.5,
+     "m": 80.0,
+     "worstUb95": 0.00029952835977661195,
+     "worstRate": 0.0,
+     "plantedN90": 2216,
+     "plantedShare": 0.992,
+     "g": 0.006816563536822493
+    }
+   ],
+   "attacks": {
+    "1": {
+     "label": "Stop at a lucky moment (uniform random, checked every round)",
+     "hits": 1,
+     "n": 10000,
+     "rate": 0.0001,
+     "ub95": 0.0004742976591654368,
+     "gMean": 0.0003341183887253282
+    },
+    "2-up": {
+     "label": "Always Up",
+     "hits": 0,
+     "n": 10000,
+     "rate": 0.0,
+     "ub95": 0.00029952835977661195,
+     "gMean": 0.00014240379873361504
+    },
+    "2-down": {
+     "label": "Always Down",
+     "hits": 0,
+     "n": 10000,
+     "rate": 0.0,
+     "ub95": 0.00029952835977661195,
+     "gMean": 0.00014059627457487948
+    },
+    "2-guard": {
+     "label": "Always Guard",
+     "hits": 0,
+     "n": 10000,
+     "rate": 0.0,
+     "ub95": 0.00029952835977661195,
+     "gMean": 0.0014361989308520008
+    },
+    "2-burst": {
+     "label": "Always Burst",
+     "hits": 0,
+     "n": 10000,
+     "rate": 0.0,
+     "ub95": 0.00029952835977661195,
+     "gMean": 0.0014528643474450004
+    },
+    "3": {
+     "label": "Uniform random",
+     "hits": 0,
+     "n": 10000,
+     "rate": 0.0,
+     "ub95": 0.00029952835977661195,
+     "gMean": 0.0003190436617672201
+    },
+    "4-switch": {
+     "label": "Habit switcher: Guard 100 rounds, then Burst",
+     "hits": 0,
+     "n": 10000,
+     "rate": 0.0,
+     "ub95": 0.00029952835977661195,
+     "gMean": 0.0016982624365049143
+    },
+    "4-drift": {
+     "label": "Slow drifter: Guard drifting to Burst",
+     "hits": 0,
+     "n": 10000,
+     "rate": 0.0,
+     "ub95": 0.00029952835977661195,
+     "gMean": 0.0003300345210940991
+    },
+    "5-4": {
+     "label": "Periodic switching, every 4 rounds",
+     "hits": 0,
+     "n": 10000,
+     "rate": 0.0,
+     "ub95": 0.00029952835977661195,
+     "gMean": 0.0002881767587433168
+    },
+    "5-8": {
+     "label": "Periodic switching, every 8 rounds",
+     "hits": 0,
+     "n": 10000,
+     "rate": 0.0,
+     "ub95": 0.00029952835977661195,
+     "gMean": 0.0003304116182419061
+    },
+    "5-16": {
+     "label": "Periodic switching, every 16 rounds",
+     "hits": 2,
+     "n": 10000,
+     "rate": 0.0002,
+     "ub95": 0.0006294441486871455,
+     "gMean": 0.0004706995529269257
+    },
+    "5-32": {
+     "label": "Periodic switching, every 32 rounds",
+     "hits": 3,
+     "n": 10000,
+     "rate": 0.0003,
+     "ub95": 0.0007751813790100997,
+     "gMean": 0.0006051416680655503
+    },
+    "5-64": {
+     "label": "Periodic switching, every 64 rounds",
+     "hits": 1,
+     "n": 10000,
+     "rate": 0.0001,
+     "ub95": 0.0004742976591654368,
+     "gMean": 0.0006702202269477459
+    },
+    "5-128": {
+     "label": "Periodic switching, every 128 rounds",
+     "hits": 0,
+     "n": 10000,
+     "rate": 0.0,
+     "ub95": 0.00029952835977661195,
+     "gMean": 0.0008768832888524024
+    },
+    "5-256": {
+     "label": "Periodic switching, every 256 rounds",
+     "hits": 0,
+     "n": 10000,
+     "rate": 0.0,
+     "ub95": 0.00029952835977661195,
+     "gMean": 0.0011716555493086645
+    },
+    "5": {
+     "label": "Periodic switching, worst period (32 rounds)",
+     "hits": 3,
+     "n": 10000,
+     "rate": 0.0003,
+     "ub95": 0.0007751813790100997,
+     "gMean": 0.0006051416680655503
+    },
+    "6": {
+     "label": "Optimiser search over 500 market-independent schedules: best, re-tested",
+     "segment": 64,
+     "bestScreenRate": 0.002,
+     "hits": 0,
+     "n": 10000,
+     "rate": 0.0,
+     "ub95": 0.00029952835977661195,
+     "gMean": 0.0003460229978078891
+    },
+    "7": {
+     "label": "Staggered family of 20 bots, one human",
+     "hits": 0,
+     "n": 10000,
+     "rate": 0.0,
+     "ub95": 0.00029952835977661195,
+     "gMean": 0.0
+    },
+    "8": {
+     "label": "Selective reveal: forfeit every round that lost",
+     "hits": 0,
+     "n": 10000,
+     "rate": 0.0,
+     "ub95": 0.00029952835977661195,
+     "gMean": 0.20693354521496818
+    },
+    "5-long": {
+     "label": "Periodic switching, worst period, twice the career length",
+     "hits": 48,
+     "n": 10000,
+     "rate": 0.0048,
+     "ub95": 0.00610139897368877,
+     "gMean": 0.0003007042462811563
+    }
+   },
+   "power": [
+    {
+     "strategy": "Single-signal storm reader (test days only)",
+     "k": 2,
+     "share": 0.6955,
+     "n50": 2481,
+     "n90": null,
+     "n99": null,
+     "g": 0.003585927619934805
+    },
+    {
+     "strategy": "Multi-signal storm reader (test days only)",
+     "k": 2,
+     "share": 0.835,
+     "n50": 1930,
+     "n90": null,
+     "n99": null,
+     "g": 0.005236979293863266
+    },
+    {
+     "strategy": "Planted edge 5%",
+     "k": 2,
+     "share": 0.0205,
+     "n50": null,
+     "n90": null,
+     "n99": null,
+     "g": 0.000577889324641693
+    },
+    {
+     "strategy": "Planted edge 10%",
+     "k": 2,
+     "share": 0.397,
+     "n50": null,
+     "n90": null,
+     "n99": null,
+     "g": 0.002250816053254593
+    },
+    {
+     "strategy": "Planted edge 20%",
+     "k": 2,
+     "share": 1.0,
+     "n50": 1185,
+     "n90": 1697,
+     "n99": 2270,
+     "g": 0.009144634712276714
+    },
+    {
+     "strategy": "Planted edge 40%",
+     "k": 2,
+     "share": 1.0,
+     "n50": 511,
+     "n90": 664,
+     "n99": 810,
+     "g": 0.03646528170768334
+    },
+    {
+     "strategy": "Single-signal storm reader (test days only)",
+     "k": 11,
+     "share": 0.3815,
+     "n50": null,
+     "n90": null,
+     "n99": null,
+     "g": 0.003669117635461674
+    },
+    {
+     "strategy": "Multi-signal storm reader (test days only)",
+     "k": 11,
+     "share": 0.649,
+     "n50": 2590,
+     "n90": null,
+     "n99": null,
+     "g": 0.0052711197873148655
+    },
+    {
+     "strategy": "Planted edge 5%",
+     "k": 11,
+     "share": 0.0015,
+     "n50": null,
+     "n90": null,
+     "n99": null,
+     "g": 0.0005854462881872979
+    },
+    {
+     "strategy": "Planted edge 10%",
+     "k": 11,
+     "share": 0.1235,
+     "n50": null,
+     "n90": null,
+     "n99": null,
+     "g": 0.0022558890316183183
+    },
+    {
+     "strategy": "Planted edge 20%",
+     "k": 11,
+     "share": 0.9935,
+     "n50": 1632,
+     "n90": 2250,
+     "n99": 2862,
+     "g": 0.009075206195396637
+    },
+    {
+     "strategy": "Planted edge 40%",
+     "k": 11,
+     "share": 1.0,
+     "n50": 695,
+     "n90": 864,
+     "n99": 1025,
+     "g": 0.03652938281833993
+    }
+   ],
+   "betCompare": [
+    {
+     "edge": 0.05,
+     "bet": "ons",
+     "k": 2,
+     "share": 0.0165,
+     "n50": null,
+     "n90": null,
+     "n99": null,
+     "g": 0.0005540133617508447
+    },
+    {
+     "edge": 0.05,
+     "bet": "plugin",
+     "k": 2,
+     "share": 0.0385,
+     "n50": null,
+     "n90": null,
+     "n99": null,
+     "g": 0.0005540133617508447
+    },
+    {
+     "edge": 0.1,
+     "bet": "ons",
+     "k": 2,
+     "share": 0.401,
+     "n50": null,
+     "n90": null,
+     "n99": null,
+     "g": 0.002252573303751599
+    },
+    {
+     "edge": 0.1,
+     "bet": "plugin",
+     "k": 2,
+     "share": 0.4955,
+     "n50": null,
+     "n90": null,
+     "n99": null,
+     "g": 0.002252573303751599
+    },
+    {
+     "edge": 0.2,
+     "bet": "ons",
+     "k": 2,
+     "share": 0.999,
+     "n50": 1202,
+     "n90": 1708,
+     "n99": 2275,
+     "g": 0.009040217398234414
+    },
+    {
+     "edge": 0.2,
+     "bet": "plugin",
+     "k": 2,
+     "share": 0.999,
+     "n50": 896,
+     "n90": 1428,
+     "n99": 2047,
+     "g": 0.009040217398234414
+    },
+    {
+     "edge": 0.4,
+     "bet": "ons",
+     "k": 2,
+     "share": 1.0,
+     "n50": 516,
+     "n90": 665,
+     "n99": 823,
+     "g": 0.03647340712259516
+    },
+    {
+     "edge": 0.4,
+     "bet": "plugin",
+     "k": 2,
+     "share": 1.0,
+     "n50": 381,
+     "n90": 519,
+     "n99": 651,
+     "g": 0.03647340712259516
+    }
+   ],
+   "lapse": [
+    {
+     "label": "Edge continues",
+     "certified": 1.0,
+     "lapsed": 0.0,
+     "medianAfterSwitch": null
+    },
+    {
+     "label": "Edge stops halfway (coin flips)",
+     "certified": 1.0,
+     "lapsed": 0.0,
+     "medianAfterSwitch": null
+    },
+    {
+     "label": "Edge turns negative halfway",
+     "certified": 1.0,
+     "lapsed": 1.0,
+     "medianAfterSwitch": 524
+    }
+   ],
+   "elapsedS": 429.49859404563904
+  },
+  {
+   "slug": "eth",
+   "c": 0.4446491165967938,
+   "theta": 0.2392851057398718,
+   "beta": [
+    0.10135102843441106,
+    0.23436991729969697,
+    0.37880618890792056,
+    0.06651486972382317,
+    0.4772679923149386
+   ],
+   "forecastMedian": 0.6717594649056431,
+   "kappa": [
+    {
+     "kappa": 0.0,
+     "m": 80.0,
+     "worstUb95": 0.0007751813790100997,
+     "worstRate": 0.0003,
+     "plantedN90": 1817,
+     "plantedShare": 0.9995,
+     "g": 0.008720799978629306
+    },
+    {
+     "kappa": 0.1,
+     "m": 80.0,
+     "worstUb95": 0.0004742976591654368,
+     "worstRate": 0.0001,
+     "plantedN90": 1896,
+     "plantedShare": 0.9995,
+     "g": 0.008264663159853764
+    },
+    {
+     "kappa": 0.25,
+     "m": 80.0,
+     "worstUb95": 0.0004742976591654368,
+     "worstRate": 0.0001,
+     "plantedN90": 2045,
+     "plantedShare": 0.996,
+     "g": 0.007602176020918078
+    },
+    {
+     "kappa": 0.5,
+     "m": 80.0,
+     "worstUb95": 0.00029952835977661195,
+     "worstRate": 0.0,
+     "plantedN90": 2328,
+     "plantedShare": 0.9835,
+     "g": 0.006556591878529638
+    }
+   ],
+   "attacks": {
+    "1": {
+     "label": "Stop at a lucky moment (uniform random, checked every round)",
+     "hits": 0,
+     "n": 10000,
+     "rate": 0.0,
+     "ub95": 0.00029952835977661195,
+     "gMean": 0.0003283234262377051
+    },
+    "2-up": {
+     "label": "Always Up",
+     "hits": 0,
+     "n": 10000,
+     "rate": 0.0,
+     "ub95": 0.00029952835977661195,
+     "gMean": 0.00012825348337561806
+    },
+    "2-down": {
+     "label": "Always Down",
+     "hits": 0,
+     "n": 10000,
+     "rate": 0.0,
+     "ub95": 0.00029952835977661195,
+     "gMean": 0.0001282397848010832
+    },
+    "2-guard": {
+     "label": "Always Guard",
+     "hits": 0,
+     "n": 10000,
+     "rate": 0.0,
+     "ub95": 0.00029952835977661195,
+     "gMean": 0.0009921103614291195
+    },
+    "2-burst": {
+     "label": "Always Burst",
+     "hits": 0,
+     "n": 10000,
+     "rate": 0.0,
+     "ub95": 0.00029952835977661195,
+     "gMean": 0.0010008511991864094
+    },
+    "3": {
+     "label": "Uniform random",
+     "hits": 0,
+     "n": 10000,
+     "rate": 0.0,
+     "ub95": 0.00029952835977661195,
+     "gMean": 0.00032040712259463424
+    },
+    "4-switch": {
+     "label": "Habit switcher: Guard 100 rounds, then Burst",
+     "hits": 0,
+     "n": 10000,
+     "rate": 0.0,
+     "ub95": 0.00029952835977661195,
+     "gMean": 0.0012353738182687875
+    },
+    "4-drift": {
+     "label": "Slow drifter: Guard drifting to Burst",
+     "hits": 0,
+     "n": 10000,
+     "rate": 0.0,
+     "ub95": 0.00029952835977661195,
+     "gMean": 0.0003330366332776219
+    },
+    "5-4": {
+     "label": "Periodic switching, every 4 rounds",
+     "hits": 0,
+     "n": 10000,
+     "rate": 0.0,
+     "ub95": 0.00029952835977661195,
+     "gMean": 0.0002878691882763702
+    },
+    "5-8": {
+     "label": "Periodic switching, every 8 rounds",
+     "hits": 0,
+     "n": 10000,
+     "rate": 0.0,
+     "ub95": 0.00029952835977661195,
+     "gMean": 0.0003711105935582622
+    },
+    "5-16": {
+     "label": "Periodic switching, every 16 rounds",
+     "hits": 2,
+     "n": 10000,
+     "rate": 0.0002,
+     "ub95": 0.0006294441486871455,
+     "gMean": 0.000439290962200698
+    },
+    "5-32": {
+     "label": "Periodic switching, every 32 rounds",
+     "hits": 3,
+     "n": 10000,
+     "rate": 0.0003,
+     "ub95": 0.0007751813790100997,
+     "gMean": 0.0005329419862137668
+    },
+    "5-64": {
+     "label": "Periodic switching, every 64 rounds",
+     "hits": 0,
+     "n": 10000,
+     "rate": 0.0,
+     "ub95": 0.00029952835977661195,
+     "gMean": 0.0006135131473572312
+    },
+    "5-128": {
+     "label": "Periodic switching, every 128 rounds",
+     "hits": 1,
+     "n": 10000,
+     "rate": 0.0001,
+     "ub95": 0.0004742976591654368,
+     "gMean": 0.0009039635767666884
+    },
+    "5-256": {
+     "label": "Periodic switching, every 256 rounds",
+     "hits": 0,
+     "n": 10000,
+     "rate": 0.0,
+     "ub95": 0.00029952835977661195,
+     "gMean": 0.0011369112382311577
+    },
+    "5": {
+     "label": "Periodic switching, worst period (32 rounds)",
+     "hits": 3,
+     "n": 10000,
+     "rate": 0.0003,
+     "ub95": 0.0007751813790100997,
+     "gMean": 0.0005329419862137668
+    },
+    "6": {
+     "label": "Optimiser search over 500 market-independent schedules: best, re-tested",
+     "segment": 4,
+     "bestScreenRate": 0.002,
+     "hits": 0,
+     "n": 10000,
+     "rate": 0.0,
+     "ub95": 0.00029952835977661195,
+     "gMean": 0.0003269585990837703
+    },
+    "7": {
+     "label": "Staggered family of 20 bots, one human",
+     "hits": 0,
+     "n": 10000,
+     "rate": 0.0,
+     "ub95": 0.00029952835977661195,
+     "gMean": 0.0
+    },
+    "8": {
+     "label": "Selective reveal: forfeit every round that lost",
+     "hits": 0,
+     "n": 10000,
+     "rate": 0.0,
+     "ub95": 0.00029952835977661195,
+     "gMean": 0.2170145128971651
+    },
+    "5-long": {
+     "label": "Periodic switching, worst period, twice the career length",
+     "hits": 37,
+     "n": 10000,
+     "rate": 0.0037,
+     "ub95": 0.0048647055939070516,
+     "gMean": 0.0002624992455300995
+    }
+   },
+   "power": [
+    {
+     "strategy": "Single-signal storm reader (test days only)",
+     "k": 2,
+     "share": 0.8145,
+     "n50": 2231,
+     "n90": null,
+     "n99": null,
+     "g": 0.004567428888744595
+    },
+    {
+     "strategy": "Multi-signal storm reader (test days only)",
+     "k": 2,
+     "share": 0.8775,
+     "n50": 2127,
+     "n90": null,
+     "n99": null,
+     "g": 0.0052554222994535315
+    },
+    {
+     "strategy": "Planted edge 5%",
+     "k": 2,
+     "share": 0.018,
+     "n50": null,
+     "n90": null,
+     "n99": null,
+     "g": 0.000559076060787618
+    },
+    {
+     "strategy": "Planted edge 10%",
+     "k": 2,
+     "share": 0.356,
+     "n50": null,
+     "n90": null,
+     "n99": null,
+     "g": 0.002167756492725867
+    },
+    {
+     "strategy": "Planted edge 20%",
+     "k": 2,
+     "share": 0.999,
+     "n50": 1274,
+     "n90": 1801,
+     "n99": 2350,
+     "g": 0.008773871556345318
+    },
+    {
+     "strategy": "Planted edge 40%",
+     "k": 2,
+     "share": 1.0,
+     "n50": 546,
+     "n90": 690,
+     "n99": 843,
+     "g": 0.03539726869084791
+    },
+    {
+     "strategy": "Single-signal storm reader (test days only)",
+     "k": 11,
+     "share": 0.531,
+     "n50": 2926,
+     "n90": null,
+     "n99": null,
+     "g": 0.0046045124181544285
+    },
+    {
+     "strategy": "Multi-signal storm reader (test days only)",
+     "k": 11,
+     "share": 0.586,
+     "n50": 2830,
+     "n90": null,
+     "n99": null,
+     "g": 0.00516512503358799
+    },
+    {
+     "strategy": "Planted edge 5%",
+     "k": 11,
+     "share": 0.002,
+     "n50": null,
+     "n90": null,
+     "n99": null,
+     "g": 0.0005515843931194407
+    },
+    {
+     "strategy": "Planted edge 10%",
+     "k": 11,
+     "share": 0.1065,
+     "n50": null,
+     "n90": null,
+     "n99": null,
+     "g": 0.0022034622582552906
+    },
+    {
+     "strategy": "Planted edge 20%",
+     "k": 11,
+     "share": 0.9885,
+     "n50": 1727,
+     "n90": 2379,
+     "n99": null,
+     "g": 0.008736989388231803
+    },
+    {
+     "strategy": "Planted edge 40%",
+     "k": 11,
+     "share": 1.0,
+     "n50": 740,
+     "n90": 906,
+     "n99": 1077,
+     "g": 0.03553804905344439
+    }
+   ],
+   "betCompare": [
+    {
+     "edge": 0.05,
+     "bet": "ons",
+     "k": 2,
+     "share": 0.0125,
+     "n50": null,
+     "n90": null,
+     "n99": null,
+     "g": 0.0005508885767037801
+    },
+    {
+     "edge": 0.05,
+     "bet": "plugin",
+     "k": 2,
+     "share": 0.04,
+     "n50": null,
+     "n90": null,
+     "n99": null,
+     "g": 0.0005508885767037801
+    },
+    {
+     "edge": 0.1,
+     "bet": "ons",
+     "k": 2,
+     "share": 0.3535,
+     "n50": null,
+     "n90": null,
+     "n99": null,
+     "g": 0.0021592911633791264
+    },
+    {
+     "edge": 0.1,
+     "bet": "plugin",
+     "k": 2,
+     "share": 0.4665,
+     "n50": null,
+     "n90": null,
+     "n99": null,
+     "g": 0.0021592911633791264
+    },
+    {
+     "edge": 0.2,
+     "bet": "ons",
+     "k": 2,
+     "share": 0.999,
+     "n50": 1278,
+     "n90": 1830,
+     "n99": 2442,
+     "g": 0.0087206876996926
+    },
+    {
+     "edge": 0.2,
+     "bet": "plugin",
+     "k": 2,
+     "share": 1.0,
+     "n50": 955,
+     "n90": 1492,
+     "n99": 2100,
+     "g": 0.0087206876996926
+    },
+    {
+     "edge": 0.4,
+     "bet": "ons",
+     "k": 2,
+     "share": 1.0,
+     "n50": 550,
+     "n90": 691,
+     "n99": 838,
+     "g": 0.035521533949955796
+    },
+    {
+     "edge": 0.4,
+     "bet": "plugin",
+     "k": 2,
+     "share": 1.0,
+     "n50": 405,
+     "n90": 532,
+     "n99": 654,
+     "g": 0.035521533949955796
+    }
+   ],
+   "lapse": [
+    {
+     "label": "Edge continues",
+     "certified": 1.0,
+     "lapsed": 0.0,
+     "medianAfterSwitch": null
+    },
+    {
+     "label": "Edge stops halfway (coin flips)",
+     "certified": 1.0,
+     "lapsed": 0.0,
+     "medianAfterSwitch": null
+    },
+    {
+     "label": "Edge turns negative halfway",
+     "certified": 1.0,
+     "lapsed": 1.0,
+     "medianAfterSwitch": 554
+    }
+   ],
+   "elapsedS": 429.79093289375305
+  },
+  {
+   "slug": "sol",
+   "c": 0.46728806722145055,
+   "theta": 0.438679802802842,
+   "beta": [
+    0.0765312036487508,
+    0.27575886565264657,
+    0.4079650118155705,
+    0.18141836103956496,
+    0.27930475670340293
+   ],
+   "forecastMedian": 0.7015324253933698,
+   "kappa": [
+    {
+     "kappa": 0.0,
+     "m": 80.0,
+     "worstUb95": 0.0004742976591654368,
+     "worstRate": 0.0001,
+     "plantedN90": 1778,
+     "plantedShare": 1.0,
+     "g": 0.009013335306802537
+    },
+    {
+     "kappa": 0.1,
+     "m": 80.0,
+     "worstUb95": 0.0004742976591654368,
+     "worstRate": 0.0001,
+     "plantedN90": 1865,
+     "plantedShare": 0.9995,
+     "g": 0.008568337385980996
+    },
+    {
+     "kappa": 0.25,
+     "m": 80.0,
+     "worstUb95": 0.00029952835977661195,
+     "worstRate": 0.0,
+     "plantedN90": 1973,
+     "plantedShare": 0.997,
+     "g": 0.007920759721834827
+    },
+    {
+     "kappa": 0.5,
+     "m": 80.0,
+     "worstUb95": 0.00029952835977661195,
+     "worstRate": 0.0,
+     "plantedN90": 2224,
+     "plantedShare": 0.9895,
+     "g": 0.0068951632782951
+    }
+   ],
+   "attacks": {
+    "1": {
+     "label": "Stop at a lucky moment (uniform random, checked every round)",
+     "hits": 0,
+     "n": 10000,
+     "rate": 0.0,
+     "ub95": 0.00029952835977661195,
+     "gMean": 0.00033682517663809176
+    },
+    "2-up": {
+     "label": "Always Up",
+     "hits": 0,
+     "n": 10000,
+     "rate": 0.0,
+     "ub95": 0.00029952835977661195,
+     "gMean": 0.00011957697544450751
+    },
+    "2-down": {
+     "label": "Always Down",
+     "hits": 0,
+     "n": 10000,
+     "rate": 0.0,
+     "ub95": 0.00029952835977661195,
+     "gMean": 0.00011952679615464428
+    },
+    "2-guard": {
+     "label": "Always Guard",
+     "hits": 0,
+     "n": 10000,
+     "rate": 0.0,
+     "ub95": 0.00029952835977661195,
+     "gMean": 0.0007218201115069313
+    },
+    "2-burst": {
+     "label": "Always Burst",
+     "hits": 0,
+     "n": 10000,
+     "rate": 0.0,
+     "ub95": 0.00029952835977661195,
+     "gMean": 0.0007432426868284352
+    },
+    "3": {
+     "label": "Uniform random",
+     "hits": 0,
+     "n": 10000,
+     "rate": 0.0,
+     "ub95": 0.00029952835977661195,
+     "gMean": 0.0003188543236188794
+    },
+    "4-switch": {
+     "label": "Habit switcher: Guard 100 rounds, then Burst",
+     "hits": 0,
+     "n": 10000,
+     "rate": 0.0,
+     "ub95": 0.00029952835977661195,
+     "gMean": 0.0009245326715185756
+    },
+    "4-drift": {
+     "label": "Slow drifter: Guard drifting to Burst",
+     "hits": 0,
+     "n": 10000,
+     "rate": 0.0,
+     "ub95": 0.00029952835977661195,
+     "gMean": 0.0003418138690401959
+    },
+    "5-4": {
+     "label": "Periodic switching, every 4 rounds",
+     "hits": 0,
+     "n": 10000,
+     "rate": 0.0,
+     "ub95": 0.00029952835977661195,
+     "gMean": 0.0002914945183831894
+    },
+    "5-8": {
+     "label": "Periodic switching, every 8 rounds",
+     "hits": 0,
+     "n": 10000,
+     "rate": 0.0,
+     "ub95": 0.00029952835977661195,
+     "gMean": 0.0003531432666600943
+    },
+    "5-16": {
+     "label": "Periodic switching, every 16 rounds",
+     "hits": 0,
+     "n": 10000,
+     "rate": 0.0,
+     "ub95": 0.00029952835977661195,
+     "gMean": 0.00041349360541090643
+    },
+    "5-32": {
+     "label": "Periodic switching, every 32 rounds",
+     "hits": 1,
+     "n": 10000,
+     "rate": 0.0001,
+     "ub95": 0.0004742976591654368,
+     "gMean": 0.0005040887552050437
+    },
+    "5-64": {
+     "label": "Periodic switching, every 64 rounds",
+     "hits": 0,
+     "n": 10000,
+     "rate": 0.0,
+     "ub95": 0.00029952835977661195,
+     "gMean": 0.0006517557230462215
+    },
+    "5-128": {
+     "label": "Periodic switching, every 128 rounds",
+     "hits": 0,
+     "n": 10000,
+     "rate": 0.0,
+     "ub95": 0.00029952835977661195,
+     "gMean": 0.0007892205306738152
+    },
+    "5-256": {
+     "label": "Periodic switching, every 256 rounds",
+     "hits": 0,
+     "n": 10000,
+     "rate": 0.0,
+     "ub95": 0.00029952835977661195,
+     "gMean": 0.0009578589710270292
+    },
+    "5": {
+     "label": "Periodic switching, worst period (32 rounds)",
+     "hits": 1,
+     "n": 10000,
+     "rate": 0.0001,
+     "ub95": 0.0004742976591654368,
+     "gMean": 0.0005040887552050437
+    },
+    "6": {
+     "label": "Optimiser search over 500 market-independent schedules: best, re-tested",
+     "segment": 2,
+     "bestScreenRate": 0.002,
+     "hits": 3,
+     "n": 10000,
+     "rate": 0.0003,
+     "ub95": 0.0007751813790100997,
+     "gMean": 0.000364221336478626
+    },
+    "7": {
+     "label": "Staggered family of 20 bots, one human",
+     "hits": 0,
+     "n": 10000,
+     "rate": 0.0,
+     "ub95": 0.00029952835977661195,
+     "gMean": 0.0
+    },
+    "8": {
+     "label": "Selective reveal: forfeit every round that lost",
+     "hits": 0,
+     "n": 10000,
+     "rate": 0.0,
+     "ub95": 0.00029952835977661195,
+     "gMean": 0.1956333382853874
+    },
+    "5-long": {
+     "label": "Periodic switching, worst period, twice the career length",
+     "hits": 10,
+     "n": 10000,
+     "rate": 0.001,
+     "ub95": 0.001695631453645378,
+     "gMean": 0.00023226656671495146
+    }
+   },
+   "power": [
+    {
+     "strategy": "Single-signal storm reader (test days only)",
+     "k": 2,
+     "share": 0.5105,
+     "n50": 2961,
+     "n90": null,
+     "n99": null,
+     "g": 0.002821258360261223
+    },
+    {
+     "strategy": "Multi-signal storm reader (test days only)",
+     "k": 2,
+     "share": 0.672,
+     "n50": 2517,
+     "n90": null,
+     "n99": null,
+     "g": 0.003890674906460601
+    },
+    {
+     "strategy": "Planted edge 5%",
+     "k": 2,
+     "share": 0.0185,
+     "n50": null,
+     "n90": null,
+     "n99": null,
+     "g": 0.0005623917811880086
+    },
+    {
+     "strategy": "Planted edge 10%",
+     "k": 2,
+     "share": 0.391,
+     "n50": null,
+     "n90": null,
+     "n99": null,
+     "g": 0.002268127144415365
+    },
+    {
+     "strategy": "Planted edge 20%",
+     "k": 2,
+     "share": 1.0,
+     "n50": 1253,
+     "n90": 1758,
+     "n99": 2293,
+     "g": 0.009052086596187262
+    },
+    {
+     "strategy": "Planted edge 40%",
+     "k": 2,
+     "share": 1.0,
+     "n50": 543,
+     "n90": 682,
+     "n99": 817,
+     "g": 0.03658807484987215
+    },
+    {
+     "strategy": "Single-signal storm reader (test days only)",
+     "k": 11,
+     "share": 0.2855,
+     "n50": null,
+     "n90": null,
+     "n99": null,
+     "g": 0.0029440722704540227
+    },
+    {
+     "strategy": "Multi-signal storm reader (test days only)",
+     "k": 11,
+     "share": 0.3815,
+     "n50": null,
+     "n90": null,
+     "n99": null,
+     "g": 0.004003990079325669
+    },
+    {
+     "strategy": "Planted edge 5%",
+     "k": 11,
+     "share": 0.001,
+     "n50": null,
+     "n90": null,
+     "n99": null,
+     "g": 0.000558719080903793
+    },
+    {
+     "strategy": "Planted edge 10%",
+     "k": 11,
+     "share": 0.1085,
+     "n50": null,
+     "n90": null,
+     "n99": null,
+     "g": 0.0022319979686125416
+    },
+    {
+     "strategy": "Planted edge 20%",
+     "k": 11,
+     "share": 0.9925,
+     "n50": 1710,
+     "n90": 2277,
+     "n99": 2944,
+     "g": 0.009057832231054786
+    },
+    {
+     "strategy": "Planted edge 40%",
+     "k": 11,
+     "share": 1.0,
+     "n50": 731,
+     "n90": 887,
+     "n99": 1041,
+     "g": 0.0367281209783271
+    }
+   ],
+   "betCompare": [
+    {
+     "edge": 0.05,
+     "bet": "ons",
+     "k": 2,
+     "share": 0.021,
+     "n50": null,
+     "n90": null,
+     "n99": null,
+     "g": 0.0005880610067436894
+    },
+    {
+     "edge": 0.05,
+     "bet": "plugin",
+     "k": 2,
+     "share": 0.0405,
+     "n50": null,
+     "n90": null,
+     "n99": null,
+     "g": 0.0005880610067436894
+    },
+    {
+     "edge": 0.1,
+     "bet": "ons",
+     "k": 2,
+     "share": 0.3595,
+     "n50": null,
+     "n90": null,
+     "n99": null,
+     "g": 0.0022250018095951248
+    },
+    {
+     "edge": 0.1,
+     "bet": "plugin",
+     "k": 2,
+     "share": 0.4905,
+     "n50": null,
+     "n90": null,
+     "n99": null,
+     "g": 0.0022250018095951248
+    },
+    {
+     "edge": 0.2,
+     "bet": "ons",
+     "k": 2,
+     "share": 0.9995,
+     "n50": 1254,
+     "n90": 1781,
+     "n99": 2326,
+     "g": 0.008995847447241885
+    },
+    {
+     "edge": 0.2,
+     "bet": "plugin",
+     "k": 2,
+     "share": 1.0,
+     "n50": 935,
+     "n90": 1445,
+     "n99": 2053,
+     "g": 0.008995847447241885
+    },
+    {
+     "edge": 0.4,
+     "bet": "ons",
+     "k": 2,
+     "share": 1.0,
+     "n50": 545,
+     "n90": 680,
+     "n99": 818,
+     "g": 0.03675206460028855
+    },
+    {
+     "edge": 0.4,
+     "bet": "plugin",
+     "k": 2,
+     "share": 1.0,
+     "n50": 401,
+     "n90": 519,
+     "n99": 640,
+     "g": 0.03675206460028855
+    }
+   ],
+   "lapse": [
+    {
+     "label": "Edge continues",
+     "certified": 1.0,
+     "lapsed": 0.0,
+     "medianAfterSwitch": null
+    },
+    {
+     "label": "Edge stops halfway (coin flips)",
+     "certified": 1.0,
+     "lapsed": 0.0,
+     "medianAfterSwitch": null
+    },
+    {
+     "label": "Edge turns negative halfway",
+     "certified": 1.0,
+     "lapsed": 1.0,
+     "medianAfterSwitch": 547
+    }
+   ],
+   "elapsedS": 430.23276591300964
+  }
+ ]
+}

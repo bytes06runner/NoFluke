@@ -386,7 +386,7 @@ def a_elapsed(feeds):
 
 def merge(stem):
     """Combines per-feed results written by parallel runs."""
-    found = sorted(REPORTS.glob(f"{stem}-*.json"))
+    found = sorted(p for p in REPORTS.glob(f"{stem}-*.json") if not p.stem.endswith("-quick"))
     return [json.loads(p.read_text())["feeds"][0] for p in found]
 
 

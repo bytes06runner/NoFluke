@@ -7,6 +7,8 @@ from .params import load_params
 from .referee import BURST, DOWN, GUARD, UP, WAD, Referee, ln_wad
 
 OUT = Path(__file__).resolve().parents[2] / "shared" / "vectors" / "referee.json"
+FLAT = OUT.with_name("referee-flat.json")
+FLAT_WIDTH = 12 + 2 * 15 + 7
 P0 = 10_000_000_000
 LN_CASES = [1, 2, 999, 10**6, 10**9, WAD // 3, WAD // 2, WAD - 1, WAD, WAD + 1, 3 * WAD // 2, 2 * WAD, 3 * WAD, 600 * WAD, 132 * 100 * WAD, 10**30, 10**40, 2**255 - 1]
 
@@ -140,10 +142,46 @@ def build(params):
     }
 
 
+def _fighter_row(state):
+    if state is None:
+        return ["0"] * 15
+    return [*state["n"], *state["nShort"], state["logW"], state["lambda"], state["A"], state["logL"], str(state["rounds"]), str(state["kAtCert"]), str(int(state["lapsed"]))]
+
+
+def flatten(data, params):
+    """One flat array per history, because Foundry parses a large nested file slowly."""
+    feed_index = {f: i for i, f in enumerate(params.feed_ids)}
+    who = {"A": "1", "B": "2"}
+    out = []
+    for h in data["histories"]:
+        row = []
+        for s in h["steps"]:
+            f = s["fighters"]
+            if s["kind"] == "round":
+                row += ["1", str(feed_index[s["feed"]]), str(s["t"]), s["p0"], s["p1"], s["c"], who[s["a"]], str(s["moveA"]), str(s["kA"]), who[s["b"]], str(s["moveB"]), str(s["kB"])]
+                fa = s["feedAfter"]
+            else:
+                row += ["2", "0", "0", "0", "0", "0", who[s["a"]], "0", str(s["kA"]), "0", "0", "0"]
+                fa = None
+            row += _fighter_row(f.get("A")) + _fighter_row(f.get("B"))
+            row += ["0"] * 7 if fa is None else [fa["meanZ"], fa["meanAbs"], fa["meanZShort"], fa["meanAbsShort"], fa["varReturn"], str(fa["count"]), str(fa["lastT"])]
+        out.append(row)
+    return {
+        "width": FLAT_WIDTH,
+        "count": len(out),
+        "lnX": [c["x"] for c in data["lnWad"]],
+        "lnY": [c["y"] for c in data["lnWad"]],
+        "barK": [str(c["k"]) for c in data["bars"]],
+        "barY": [c["lnBar"] for c in data["bars"]],
+        "h": out,
+    }
+
+
 if __name__ == "__main__":
     params = load_params()
     data = build(params)
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(data) + "\n")
+    FLAT.write_text(json.dumps(flatten(data, params)) + "\n")
     steps = sum(len(h["steps"]) for h in data["histories"])
     print(f"wrote {OUT.name}: {len(data['histories'])} histories, {steps} steps, {len(data['lnWad'])} ln cases")

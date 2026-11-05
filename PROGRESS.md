@@ -3,7 +3,16 @@
 Rules: every significant step adds an entry: what changed, test output, tx hashes, the next step. Never edit old entries.
 
 ## Currently working on
-- Claude Code (Srijeets-MacBook-Air-2): A1 FightMath, then A4 validation, then A2 DuelArena. Claimed 2026-11-05 21:45 IST.
+- Nobody. Stopped 2026-11-05 22:15 IST at the usage limit. Next: ENS contracts (see NOTES.md).
+
+---
+
+## 2026-11-05 22:15 IST · Claude Code
+**Changed:** FightMath in three languages, FighterRegistry, DuelArena, BackingVault, validation simulator, referee settings calibrated on real data.
+**Tests:** last full runs: forge 123 passed, pytest 63 passed, vitest 20 passed. Nothing deployed, no transactions sent.
+**Validation:** the 10,000-seed run on all feeds was started and had not finished at this entry, so no final numbers are claimed. Earlier BTC samples are in `docs/DECISIONS.md`.
+**Process slip:** `DuelArena.sol` was written before its tests, against the test-first rule. The tests were written straight after, and it is unproven against real Pyth.
+**Next:** check the deployed ENSv2 ABI, then FamilyRegistrar and VerdictResolver, then deploy.
 
 ---
 

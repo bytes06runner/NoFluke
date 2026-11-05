@@ -1,10 +1,13 @@
 # Current state
 
-Last updated 2026-11-05 21:45 IST.
+Last updated 2026-11-05 22:15 IST.
 
-- **Working:** config and CI; referee v3 identical in Python, TypeScript and Solidity.
-- **Not started:** FightMath, DuelArena, FighterRegistry, BackingVault, World backend, ENS contracts, Arkiv, Swarm, runner, web.
-- **Blocked on the owner:** Pyth API key, World clients, approval for testnet broadcasts and for registering `nofluke.eth`. See `docs/KEYS_NEEDED.md`.
+- **Working, tested locally:** referee v3 and FightMath (same vectors in Python, TypeScript and Solidity), FighterRegistry, DuelArena, BackingVault. Nothing is deployed.
+- **Not started:** FamilyRegistrar, VerdictResolver, deploy script, World backend, Arkiv, Swarm, runner, fleet, web, `docs/scoring-rule.md`.
+- **In progress when stopped:** `make validate` (10,000 seeds, all feeds). Its output is `docs/reports/referee-validation.md`. If it did not finish, rerun it. Results are not final until it passes.
+- **Next step:** compare the deployed ENSv2 ABI with `contracts/lib/contracts-v2`. Source main has `UserRegistry.initialize(address,uint256)`, while the docs show a grants array. Read selectors with `cast code <address> --rpc-url <url>`: the last check failed because the flag order was wrong. Pin the submodule to the deployed commit if they differ.
+- **Known to fix:** `docs/interfaces.md` is behind the code (createDuel has no vault amount, only the joiner can be vault-funded, `voidBoundary` replaces `voidRound`, `onSettle` has a forfeit flag). `feeds.*.stormCWad` and `sigmaInitPpm` still need the fitted values from validation. Real Pyth `parsePriceFeedUpdatesUnique` is unproven on Sepolia.
+- **Before the fleet starts:** all contracts must be deployed together, because addresses are immutable and a redeploy resets verdict history.
+- **Blocked on the owner:** Pyth API key, World clients, approval for testnet broadcasts and for registering `nofluke.eth`, Sepolia ETH top-up. See `docs/KEYS_NEEDED.md`.
 - **Open questions for the owner:** ETHGlobal disclosure of the practice work, and money in the event build. See `docs/DECISIONS.md`.
-- **Parameters still provisional:** κ, the mean and habit short horizons, the lapse floor, storm C, and the initial sigmas. Validation will set them.
 - **Known practical issue:** GitHub rejects some pushes with transient server errors. `scripts/push.sh` scans and retries.

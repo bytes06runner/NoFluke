@@ -1,0 +1,6 @@
+packages:
+  - shared
+  - server
+  - agents
+  - backend
+  - web

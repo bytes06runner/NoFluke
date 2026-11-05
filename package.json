@@ -1,0 +1,11 @@
+{
+  "name": "nofluke",
+  "private": true,
+  "license": "MIT",
+  "engines": { "node": ">=20" },
+  "packageManager": "pnpm@9.15.9",
+  "scripts": {
+    "lint-hardcode": "node scripts/lint-hardcode.mjs",
+    "test": "pnpm -r --if-present test"
+  }
+}
